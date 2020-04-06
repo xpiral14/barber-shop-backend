@@ -1,6 +1,6 @@
 import { Model, DataTypes } from "sequelize";
 
-export default class Gender extends Model {
+export default class UserPhone extends Model {
   static init(sequelize) {
     super.init(
       {
@@ -9,9 +9,13 @@ export default class Gender extends Model {
           primaryKey: true,
           autoIncrement: true,
         },
-        name: {
-          type: DataTypes.STRING
-        }
+        userId: {
+          type: DataTypes.INTEGER,
+        },
+        phone: {
+          type: DataTypes.STRING(100),
+          allowNull: false,
+        },
       },
       { sequelize }
     );

@@ -1,6 +1,6 @@
 import { Model, DataTypes } from "sequelize";
 
-export default class Gender extends Model {
+export default class Service extends Model {
   static init(sequelize) {
     super.init(
       {
@@ -10,8 +10,11 @@ export default class Gender extends Model {
           autoIncrement: true,
         },
         name: {
-          type: DataTypes.STRING
-        }
+          type: DataTypes.STRING,
+        },
+        price: {
+          type: DataTypes.FLOAT(10, 2),
+        },
       },
       { sequelize }
     );
