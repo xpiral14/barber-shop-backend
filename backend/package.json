@@ -11,6 +11,18 @@
   },
   "scripts": {
     "start": "NODE_ENV=production node src/server.js",
-    "dev:start": "NODE_ENV=development nodemon --exec sucrase-node src/server.js"
+    "dev:start": "NODE_ENV=development nodemon --exec sucrase-node src/server.js",
+    "commit": "git cz",
+    "test": "jest"
+  },
+  "devDependencies": {
+    "husky": "^4.2.3",
+    "jest": "^25.2.7"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm test",
+      "pre-push": "npm test"
+    }
   }
 }
