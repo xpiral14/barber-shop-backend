@@ -27,7 +27,7 @@ export default class Company extends Model {
           allowNull: false,
           unique: true,
         },
-        passwordhash: {
+        passwordHash: {
           type: DataTypes.STRING(200),
           allowNull: false,
         },

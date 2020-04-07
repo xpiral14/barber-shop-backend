@@ -42,7 +42,7 @@ export default class User extends Model {
           allowNull: false,
           unique: true,
         },
-        passwordhash: {
+        passwordHash: {
           type: DataTypes.STRING(200),
           allowNull: false,
         },
