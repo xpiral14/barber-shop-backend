@@ -35,4 +35,7 @@ export default class CompanyAddress extends Model {
       { sequelize }
     );
   }
+  static associate(models) {
+    this.belongsTo(models.Company, { as: "company" });
+  }
 }

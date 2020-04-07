@@ -1,6 +1,6 @@
 import { Model, DataTypes } from "sequelize";
 
-export default class CompanyPhone extends Model {
+export default class UserService extends Model {
   static init(sequelize) {
     super.init(
       {
@@ -9,18 +9,14 @@ export default class CompanyPhone extends Model {
           primaryKey: true,
           autoIncrement: true,
         },
-        userId: {
-          type: DataTypes.INTEGER,
-        },
-        phone: {
-          type: DataTypes.STRING(100),
-          allowNull: false,
-        },
       },
       { sequelize }
     );
   }
+
   static associate(models) {
     this.belongsTo(models.Company, { as: "company" });
+    this.belongsTo(models.User, { as: "client", foreignKey: "clientId" });
+    this.belongsTo(models.User, { as: "employee", foreignKey: "employeeId" });
   }
 }

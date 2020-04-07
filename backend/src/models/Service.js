@@ -19,4 +19,9 @@ export default class Service extends Model {
       { sequelize }
     );
   }
+
+  static associate(models) {
+    this.belongsToMany(models.Company, { through: "UserServices" });
+    this.belongsToMany(models.User, { through: "UserServices" });
+  }
 }

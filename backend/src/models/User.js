@@ -50,4 +50,12 @@ export default class User extends Model {
       { sequelize }
     );
   }
+  static associate(models) {
+    this.belongsTo(models.Company, { as: "company" });
+    this.belongsTo(models.Gender, { as: "gender" });
+    this.belongsTo(models.UserType, { as: "userType" });
+    this.hasOne(models.UserAddress, { as: "address" });
+    this.hasMany(models.UserPhone, { as: "phones" });
+    
+  }
 }

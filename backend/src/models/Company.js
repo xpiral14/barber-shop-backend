@@ -35,4 +35,14 @@ export default class Company extends Model {
       { sequelize }
     );
   }
+  static associate(models) {
+    this.hasMany(models.CompanyAddress, {as: "addresses"})
+    this.hasMany(models.User, {as: "users"});
+    this.hasMany(models.CompanyPhone, {as: "phones"});
+    this.belongsToMany(models.Service, {
+      through: "UserServices",
+      foreignKey: "companyId",
+      as: "services"
+    });
+  }
 }

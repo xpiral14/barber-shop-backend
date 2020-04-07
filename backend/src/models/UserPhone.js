@@ -20,4 +20,7 @@ export default class UserPhone extends Model {
       { sequelize }
     );
   }
+  static associate(models) {
+    this.belongsTo(models.User, { as: "user" });
+  }
 }
