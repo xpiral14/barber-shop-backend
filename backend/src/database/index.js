@@ -11,9 +11,18 @@ class Database {
       dbConfig.password,
       dbConfig
     );
+    this.testConection();
     this.importModels();
   }
 
+  async testConection() {
+    try {
+      await this.connection.authenticate();
+      console.log("connected with db");
+    } catch (error) {
+      console.log("error trying to connect to db");
+    }
+  }
   async importModels() {
     readdir(path.join(__dirname, "../models"), async (err, files) => {
       if (err) {
