@@ -20,17 +20,19 @@ class Database {
         console.log(err);
         return;
       }
-      await Promise.all(
+      let models = await Promise.all(
         files.map(async (file) => {
           let model = (
             await import(path.join(__dirname, "../models", `/${file}`))
           ).default;
           model.init(this.connection);
-          model.associate && model.associate(this.connection.models);
           return model;
         })
       );
-      console.log(this.connection.models)
+
+      models.map(
+        (model) => model.associate && model.associate(this.connection.models)
+      );
     });
   }
 }

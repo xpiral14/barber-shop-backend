@@ -34,6 +34,12 @@ module.exports = {
       number: {
         type: Sequelize.STRING(100),
       },
+      createdAt:{
+        type: Sequelize.DATE
+      },
+      updatedAt:{
+        type: Sequelize.DATE
+      }
     });
   },
 
