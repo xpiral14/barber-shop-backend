@@ -1,5 +1,4 @@
-import fs, { readdir } from "fs";
-import { promisify } from "util";
+import { readdir } from "fs";
 import path from "path";
 import { Sequelize } from "sequelize";
 import dbConfig from "../config/database";

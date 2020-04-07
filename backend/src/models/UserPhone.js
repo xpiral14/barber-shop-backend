@@ -1,4 +1,4 @@
-import { Model, DataTypes } from "sequelize";
+import { Model, DataTypes } from 'sequelize';
 
 export default class UserPhone extends Model {
   static init(sequelize) {
@@ -21,6 +21,6 @@ export default class UserPhone extends Model {
     );
   }
   static associate(models) {
-    this.belongsTo(models.User, { as: "user" });
+    this.belongsTo(models.User, { as: 'user' });
   }
 }

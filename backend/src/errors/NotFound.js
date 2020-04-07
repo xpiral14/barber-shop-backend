@@ -1,4 +1,4 @@
-import { NOT_FOUND } from "../constants/HttpErrors";
+import { NOT_FOUND } from "../constants/HttpStatusCod";
 
 export default class NotFound extends Error {
   constructor(message) {

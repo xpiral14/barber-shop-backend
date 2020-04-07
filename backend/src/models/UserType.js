@@ -9,6 +9,10 @@ export default class UserType extends Model {
           primaryKey: true,
           autoIncrement: true,
         },
+        name: {
+          type: DataTypes.STRING,
+          allowNull: false,
+        },
       },
       { sequelize }
     );

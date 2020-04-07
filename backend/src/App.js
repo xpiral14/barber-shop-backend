@@ -1,11 +1,10 @@
 import express from "express";
 import "./database";
-import Company from "./models/Company";
-import CompanyAddress from "./models/CompanyAddress";
 import sessionRouter from "./routes/sessionRouter";
-import bcrypt from "bcrypt";
-import { SALT } from "./constants/secrets";
-import { BAD_REQUEST } from "./constants/HttpErrors";
+import { BAD_REQUEST } from "./constants/HttpStatusCod";
+import companyRouter from "./routes/companyRouter";
+import userRouter from "./routes/userRoutes";
+
 class App {
   constructor() {
     this.app = express();
@@ -22,19 +21,28 @@ class App {
   middlewares() {}
   routes() {
     this.app.use("/session", sessionRouter);
+    this.app.use("/company", companyRouter);
+    this.app.use("/user", userRouter);
   }
 
   handleError() {
     this.app.use((err, req, res, next) => {
+      // console.log(err.stack);
       let errors;
       let status;
+      console.log(err.name);
       switch (err.name) {
         case "ValidationError":
           errors = err.errors;
           status = BAD_REQUEST;
           break;
+        case "SequelizeValidationError": {
+          status = BAD_REQUEST;
+          errors = err.message.replace(/Validation error: /g, "").split(",\n")
+          break;
+        }
         default:
-          errors = [err.message];
+          errors = err.message && [err.message];
           status = err.status || 500;
           break;
       }

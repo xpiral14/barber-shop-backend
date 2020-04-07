@@ -1,4 +1,4 @@
-import { BAD_REQUEST } from "../constants/HttpErrors"
+import { BAD_REQUEST } from "../constants/HttpStatusCod"
 
 
 export default class BadRequest extends Error {
