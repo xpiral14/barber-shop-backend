@@ -5,7 +5,9 @@ import NotFound from '../errors/NotFound';
 import { notfound, notExists, exists } from '../constants/messages';
 import BadRequest from '../errors/BadRequest';
 import { EMPLOYEE, CLIENT } from '../constants/userTypes';
-
+import Notification from '../schemas/Notification';
+import { format, parseISO } from 'date-fns';
+import { ptBR } from 'date-fns/locale';
 export default class UserServiceController {
   static async index(req, res, next) {
     try {
@@ -79,7 +81,7 @@ export default class UserServiceController {
           appointment: req.data.appointment,
         },
       });
-      if (existsService) throw new BadRequest("horário já oculpado");
+      if (existsService) throw new BadRequest('horário já oculpado');
       const userService = await UserService.create(req.data);
 
       const userServiceData = await UserService.findByPk(userService.id, {
@@ -94,6 +96,20 @@ export default class UserServiceController {
           },
         ],
       });
+      console.log(userServiceData.appointment);
+      let notificationContent = `Novo agendamento de ${userServiceData.client.name} para o dia ${format(
+        userServiceData.appointment,
+        "dd 'de' MMMM 'às' HH:mm",
+        {
+          locale: ptBR,
+        }
+      )}`;
+
+      await Notification.create({
+        content: notificationContent,
+        user: req.data.employeeId,
+      });
+
       return res.json(userServiceData);
     } catch (error) {
       return next(error);

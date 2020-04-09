@@ -1,7 +1,8 @@
-import { readdir } from "fs";
-import path from "path";
-import { Sequelize } from "sequelize";
-import dbConfig from "../config/database";
+import { readdir } from 'fs';
+import path from 'path';
+import { Sequelize } from 'sequelize';
+import dbConfig from '../config/database';
+import mongoose from 'mongoose';
 class Database {
   constructor() {
     this.connection = new Sequelize(
@@ -12,36 +13,48 @@ class Database {
     );
     this.testConection();
     this.importModels();
+    this.mongo();
   }
 
   async testConection() {
     try {
       await this.connection.authenticate();
-      console.log("connected with db");
+      console.log('connected with db');
     } catch (error) {
-      console.log("error trying to connect to db");
+      console.log('error trying to connect to db');
     }
   }
   async importModels() {
-    readdir(path.join(__dirname, "../models"), async (err, files) => {
+    readdir(path.join(__dirname, '../models'), async (err, files) => {
       if (err) {
         console.log(err);
         return;
       }
       let models = await Promise.all(
         files.map(async (file) => {
-          let model = (
-            await import(path.join(__dirname, "../models", `/${file}`))
-          ).default;
+          let model = (await import(path.join(__dirname, '../models', `/${file}`))).default;
           model.init(this.connection);
           return model;
         })
       );
 
-      models.map(
-        (model) => model.associate && model.associate(this.connection.models)
-      );
+      models.map((model) => model.associate && model.associate(this.connection.models));
     });
+  }
+
+  mongo() {
+    this.mongoConnection = mongoose
+      .connect('mongodb://localhost:27017/barber-shop', {
+        useNewUrlParser: true,
+        useFindAndModify: true,
+        useUnifiedTopology: true,
+      })
+      .then((value) => {
+        console.log('Conected with mongo');
+      })
+      .catch((error) => {
+        throw err;
+      });
   }
 }
 
