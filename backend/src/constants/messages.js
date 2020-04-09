@@ -21,3 +21,5 @@ export const exists = (entity, field, entityGender, fieldGender) =>
   } ${field}`;
 
 export const registered = (field, gender) => `${gender === "F" ? "Esta" : "Este"} ${field} já está cadastrado no sistema.` 
+
+export const notExists = (field, gender) => `Não existe ${gender === "F"? "uma" : "um"} ${field} com este valor.`
