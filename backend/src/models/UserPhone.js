@@ -17,7 +17,14 @@ export default class UserPhone extends Model {
           allowNull: false,
         },
       },
-      { sequelize }
+      {
+        sequelize,
+        defaultScope: {
+          attributes: {
+            exclude: ['userId'],
+          },
+        },
+      }
     );
   }
   static associate(models) {

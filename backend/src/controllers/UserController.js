@@ -1,17 +1,20 @@
-import User from "../models/User";
-import { EMPLOYEE } from "../constants/userTypes";
-import NotFound from "../errors/NotFound";
-import { SUCCESS, CREATED } from "../constants/HttpStatusCod";
+import User from '../models/User';
+import NotFound from '../errors/NotFound';
+import { SUCCESS, CREATED } from '../constants/HttpStatusCod';
+import queryParamToSequelizeQuery from '../utils/queryParamsToSequelizeQuery';
 
 export default class UserController {
   static async index(req, res, next) {
     try {
+      let condition = req.query
+        ? { ...queryParamToSequelizeQuery(req.query), companyId: req.companyId }
+        : { companyId: req.companyId };
       let users = await User.findAll({
         where: {
-          companyId: req.companyId,
+          ...condition,
         },
       });
-
+      if (!users.length) throw new NotFound();
       return res.json(users);
     } catch (error) {
       return next(error);
@@ -20,12 +23,12 @@ export default class UserController {
 
   static async showClient(req, res, next) {
     try {
-      let client = await User.findAll({
+      let client = await User.findOneClient({
         where: {
           id: req.params.id,
           companyId: req.companyId,
-          userTypeId: EMPLOYEE,
         },
+        include: [],
       });
 
       if (!client) throw new NotFound();
@@ -38,11 +41,10 @@ export default class UserController {
 
   static async showEmployee(req, res, next) {
     try {
-      let employee = await User.findAll({
+      let employee = await User.findOneEmployee({
         where: {
           id: req.params.id,
           companyId: req.companyId,
-          userTypeId: EMPLOYEE,
         },
       });
 

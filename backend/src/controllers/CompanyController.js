@@ -8,7 +8,6 @@ export default class CompanyController {
     console.log("aqui");
     try {
       const company = await Company.findByPk(req.companyId);
-
       return res.status(SUCCESS).json(company);
     } catch (error) {
       return next(error);

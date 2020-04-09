@@ -1,10 +1,11 @@
 import { Router } from "express";
 import UserController from "../controllers/UserController";
 import validate from "../middlewares/validate";
+import authorization from "../middlewares/authorization";
 
 const userRouter = Router();
 
-// userRouter.use(authorization())
+userRouter.use(authorization())
 userRouter.post(
   "/",
   validate([

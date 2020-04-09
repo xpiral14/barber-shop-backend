@@ -1,6 +1,10 @@
-import { Model, DataTypes } from "sequelize";
-import hashPassword from "../utils/hashPassword";
-import { exists, registered } from "../constants/messages";
+import { Model, DataTypes } from 'sequelize';
+import hashPassword from '../utils/hashPassword';
+import { exists, registered } from '../constants/messages';
+import CompanyAddress from './CompanyAddress';
+import CompanyPhone from './CompanyPhone';
+
+const { parseFromTimeZone, formatToTimeZone } = require('date-fns-timezone');
 export default class Company extends Model {
   static init(sequelize) {
     super.init(
@@ -32,7 +36,7 @@ export default class Company extends Model {
                 },
               })
                 .then((data) => {
-                  if (!!data) throw new Error(exists("barbearia", "cnpj", "f"));
+                  if (!!data) throw new Error(exists('barbearia', 'cnpj', 'f'));
                 })
                 .catch((err) => {
                   throw err;
@@ -46,9 +50,9 @@ export default class Company extends Model {
           unique: true,
           validate: {
             emailExists(email) {
-              return Company.findOne({ where: { email }, attributes: ["email"] })
+              return Company.findOne({ where: { email }, attributes: ['email'] })
                 .then((data) => {
-                  if (!!data) throw new Error(registered("email"));
+                  if (!!data) throw new Error(registered('email'));
                 })
                 .catch((err) => {
                   throw err;
@@ -62,22 +66,41 @@ export default class Company extends Model {
         password: {
           type: DataTypes.VIRTUAL,
           set(val) {
-            this.setDataValue("password", val);
+            this.setDataValue('password', val);
           },
         },
       },
       {
         sequelize,
         defaultScope: {
+          include: [
+            {
+              model: CompanyAddress,
+              as: 'addresses',
+            },
+            {
+              model: CompanyPhone,
+              as: 'companyPhones',
+            },
+          ],
           attributes: {
-            exclude: ["passwordHash"],
+            exclude: ['passwordHash'],
           },
         },
         hooks: {
           beforeCreate(model, options) {
-            console.log("to aqui beatch");
+            let timezone = 'America/Sao_Paulo';
             if (model.password) {
               model.passwordHash = hashPassword(model.password);
+
+              const utcDate = parseFromTimeZone(new Date(), {
+                timeZone: 'America/Sao_Paulo',
+              });
+
+              // Set the output to "1.9.2018 18:01:36.386 GMT+02:00 (CEST)"
+              const date = new Date('2018-09-01Z16:01:36.386Z');
+              const format = 'D.M.YYYY HH:mm:ss.SSS [GMT]Z (z)';
+              const output = formatToTimeZone(date, format, { timeZone: 'Europe/Berlin' });
             }
           },
         },
@@ -86,13 +109,13 @@ export default class Company extends Model {
   }
 
   static associate(models) {
-    this.hasMany(models.CompanyAddress, { as: "addresses" });
-    this.hasMany(models.User, { as: "users" });
-    this.hasMany(models.CompanyPhone, { as: "phones" });
+    this.hasMany(models.CompanyAddress, { as: 'addresses' });
+    this.hasMany(models.User, { as: 'users' });
+    this.hasMany(models.CompanyPhone, { as: 'companyPhones', foreignKey: 'companyId' });
     this.belongsToMany(models.Service, {
-      through: "UserServices",
-      foreignKey: "companyId",
-      as: "services",
+      through: 'UserServices',
+      foreignKey: 'companyId',
+      as: 'services',
     });
   }
 }

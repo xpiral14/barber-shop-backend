@@ -1,9 +1,10 @@
-import express from "express";
-import "./database";
-import sessionRouter from "./routes/sessionRouter";
-import { BAD_REQUEST } from "./constants/HttpStatusCod";
-import companyRouter from "./routes/companyRouter";
-import userRouter from "./routes/userRoutes";
+import express from 'express';
+import './database';
+import sessionRouter from './routes/sessionRouter';
+import { BAD_REQUEST } from './constants/HttpStatusCod';
+import companyRouter from './routes/companyRouter';
+import userRouter from './routes/userRoutes';
+import userServiceRouter from './routes/userServiceRouter';
 
 class App {
   constructor() {
@@ -20,9 +21,10 @@ class App {
   }
   middlewares() {}
   routes() {
-    this.app.use("/session", sessionRouter);
-    this.app.use("/company", companyRouter);
-    this.app.use("/user", userRouter);
+    this.app.use('/session', sessionRouter);
+    this.app.use('/company', companyRouter);
+    this.app.use('/user', userRouter);
+    this.app.use('/service', userServiceRouter);
   }
 
   handleError() {
@@ -32,13 +34,18 @@ class App {
       let status;
       console.log(err.name);
       switch (err.name) {
-        case "ValidationError":
+        case 'ValidationError':
           errors = err.errors;
           status = BAD_REQUEST;
           break;
-        case "SequelizeValidationError": {
+        case 'SequelizeValidationError': {
           status = BAD_REQUEST;
-          errors = err.message.replace(/Validation error: /g, "").split(",\n")
+          errors = err.message.replace(/Validation error: /g, '').split(',\n');
+          break;
+        }
+        case 'TokenExpiredError': {
+          status = BAD_REQUEST;
+          errors = ['O token de acesso expirou'];
           break;
         }
         default:

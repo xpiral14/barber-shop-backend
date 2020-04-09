@@ -32,7 +32,11 @@ export default class UserAddress extends Model {
           type: DataTypes.STRING(100),
         },
       },
-      { sequelize }
+      { sequelize, defaultScope: {
+        attributes:{
+          exclude:["userId"]
+        }
+      } }
     );
   }
   static associate(models) {

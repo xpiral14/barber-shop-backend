@@ -9,7 +9,7 @@ export default class CompanyPhone extends Model {
           primaryKey: true,
           autoIncrement: true,
         },
-        userId: {
+        companyId: {
           type: DataTypes.INTEGER,
         },
         phone: {
@@ -17,7 +17,7 @@ export default class CompanyPhone extends Model {
           allowNull: false,
         },
       },
-      { sequelize }
+      { sequelize, tableName: "CompanyPhones" }
     );
   }
   static associate(models) {

@@ -1,7 +1,12 @@
-import { Model, DataTypes } from "sequelize";
-import UserType from "./UserType";
-import hashPassword from "../utils/hashPassword";
-import { registered } from "../constants/messages";
+import { Model, DataTypes } from 'sequelize';
+import UserType from './UserType';
+import hashPassword from '../utils/hashPassword';
+import { registered } from '../constants/messages';
+import { EMPLOYEE, CLIENT } from '../constants/userTypes';
+import Company from './Company';
+import Gender from './Gender';
+import UserAddress from './UserAddress';
+import UserPhone from './UserPhone';
 
 export default class User extends Model {
   static init(sequelize) {
@@ -16,24 +21,24 @@ export default class User extends Model {
           type: DataTypes.INTEGER,
           allowNull: false,
           references: {
-            model: "Companies",
-            key: "id",
+            model: 'Companies',
+            key: 'id',
           },
         },
         userTypeId: {
           type: DataTypes.INTEGER,
           allowNull: false,
           references: {
-            model: "Users",
-            key: "id",
+            model: 'Users',
+            key: 'id',
           },
         },
         genderId: {
           type: DataTypes.INTEGER,
           allowNull: false,
           references: {
-            model: "Genders",
-            key: "id",
+            model: 'Genders',
+            key: 'id',
           },
         },
         name: {
@@ -46,9 +51,9 @@ export default class User extends Model {
           unique: true,
           validate: {
             emailExists(email) {
-              return User.findOne({ where: { email }, attributes: ["email"] })
+              return User.findOne({ where: { email }, attributes: ['email'] })
                 .then((data) => {
-                  if (!!data) throw new Error(registered("email"));
+                  if (!!data) throw new Error(registered('email'));
                 })
                 .catch((err) => {
                   throw err;
@@ -62,17 +67,23 @@ export default class User extends Model {
         password: {
           type: DataTypes.VIRTUAL,
           set(val) {
-            this.setDataValue("password", val);
+            this.setDataValue('password', val);
           },
         },
       },
       {
         sequelize,
         defaultScope: {
-          include: [{ model: UserType, as: "userType" }],
+          include: [{ model: UserType, as: 'userType' }],
           attributes: {
-            exclude: ["passwordHash"],
+            exclude: ['passwordHash', 'companyId', 'userTypeId', 'genderId'],
           },
+          include: [
+            { model: UserType, as: 'userType' },
+            { model: Gender, as: 'gender' },
+            { model: UserAddress, as: 'address' },
+            { model: UserPhone, as: 'phones' },
+          ],
         },
         hooks: {
           beforeCreate(model, options) {
@@ -81,15 +92,33 @@ export default class User extends Model {
             }
           },
         },
-        timestamps: true,
       }
     );
   }
   static associate(models) {
-    this.belongsTo(models.Company, { as: "company" });
-    this.belongsTo(models.Gender, { as: "gender" });
-    this.belongsTo(models.UserType, { as: "userType" });
-    this.hasOne(models.UserAddress, { as: "address" });
-    this.hasMany(models.UserPhone, { as: "phones" });
+    this.belongsTo(models.Company, { as: 'company' });
+    this.belongsTo(models.Gender, { as: 'gender' });
+    this.belongsTo(models.UserType, { as: 'userType' });
+    this.hasMany(models.UserAddress, { as: 'address' });
+    this.hasMany(models.UserPhone, { as: 'phones' });
+  }
+
+  static findAllClients(expression) {
+    expression.where.userTypeId = CLIENT;
+    return this.findAll(expression);
+  }
+
+  static findAllEmployees(expression) {
+    expression.where.userTypeId = EMPLOYEE;
+    return this.findAll(expression);
+  }
+
+  static findOneClient(expression) {
+    expression.where.userTypeId = CLIENT;
+    return this.findOne(expression);
+  }
+  static findOneEmployee(expression) {
+    expression.where.userTypeId = EMPLOYEE;
+    return this.findOne(expression);
   }
 }
