@@ -6,6 +6,7 @@ module.exports = {
       "Companies",
       [
         {
+          id:1,
           fantasyName: "Samuel Corte fino",
           cnpj: "53300539000122",
           email: "sa@gmail.com",
@@ -13,6 +14,7 @@ module.exports = {
             "$2b$08$P4cfNPFO6m5IKnLPfW8NOeMncEq4E7/daN7ekK9QT9b9Bm28Hv2ty",
         },
         {
+          id:2,
           fantasyName: "Barba Afiada",
           cnpj: "72363313000115",
           email: "barbaafiada@gmail.com",

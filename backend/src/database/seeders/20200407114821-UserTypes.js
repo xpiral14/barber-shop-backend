@@ -6,9 +6,11 @@ module.exports = {
       "UserTypes",
       [
         {
+          id:1,
           name: "EMPLOYEE",
         },
         {
+          id:2,
           name: "CLIENT",
         },
       ],

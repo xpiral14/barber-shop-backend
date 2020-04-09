@@ -6,9 +6,11 @@ module.exports = {
       "Genders",
       [
         {
+          id: 1,
           name: "FEMALE",
         },
         {
+          id:2,
           name: "MASCULINE",
         },
       ],
