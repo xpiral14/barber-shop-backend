@@ -22,7 +22,16 @@ export default class SessionController {
           email,
           userTypeId: BARBER,
         },
-        attributes: ['email', 'passwordHash', 'id', 'name', 'userTypeId', 'companyId'],
+        attributes: [
+          'email',
+          'passwordHash',
+          'id',
+          'name',
+          'userTypeId',
+          'companyId',
+          'perfilImage',
+          'perfilImageURL',
+        ],
         include: [{ model: Company, as: 'company' }],
       });
       if (!barber) if (!barber) throw new NotFound(notfound('Barbeiro'));
