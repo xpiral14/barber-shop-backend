@@ -116,6 +116,8 @@ export default class User extends Model {
     this.belongsTo(models.UserType, { as: 'userType' });
     this.hasMany(models.UserAddress, { as: 'address' });
     this.hasMany(models.UserPhone, { as: 'phones' });
+    this.hasOne(models.ServiceDurationTime, { foreignKey: 'barberId', as: 'serviceDuration' });
+    this.hasMany(models.WorkIntervalTime, { foreignKey: 'barberId', as: 'workInterval' });
   }
 
   static findAllClients(expression) {
