@@ -2,7 +2,7 @@
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable("ServiceDurationTimes", {
+    return queryInterface.createTable("WorkIntervalTimes", {
       id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
@@ -19,7 +19,6 @@ module.exports = {
       initialTime: {
         type: Sequelize.INTEGER,
         allowNull: false,
-        unique: true,
       },
       finishTime: {
         type: Sequelize.INTEGER,
@@ -35,6 +34,6 @@ module.exports = {
   },
 
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable("ServiceDurationTimes");
+    return queryInterface.dropTable("WorkIntervalTimes");
   },
 };
