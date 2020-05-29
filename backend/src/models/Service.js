@@ -1,4 +1,4 @@
-import { Model, DataTypes } from "sequelize";
+import { Model, DataTypes } from 'sequelize';
 
 export default class Service extends Model {
   static init(sequelize) {
@@ -21,7 +21,7 @@ export default class Service extends Model {
   }
 
   static associate(models) {
-    this.belongsToMany(models.Company, { through: "UserServices" });
-    this.belongsToMany(models.User, { through: "UserServices" });
+    this.belongsToMany(models.Company, { through: 'UserServices' });
+    this.belongsToMany(models.User, { through: 'UserServices' });
   }
 }
