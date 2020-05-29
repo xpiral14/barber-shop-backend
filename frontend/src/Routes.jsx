@@ -3,12 +3,15 @@ import { Switch, Route } from "react-router-dom";
 import Autenticated from "./pages/Autenticated";
 import Appointments from "./pages/Appointments";
 import PrivateRoute from "./components/PrivateRoute";
+import Login from "./pages/Login";
+import { EMPLOYEE } from "./constants/userLevel";
+import Header from "./components/Header";
 export default function Routes() {
   return (
     <Switch>
-      <PrivateRoute authLevel={[2]} path="/" exact component={() => <h1>Login</h1>} />
-      <Route path="/main" exact component={Autenticated} />
-      <Route path="/appointment" component={Appointments} />
+      <PrivateRoute path="/" exact component={Login} />
+      <PrivateRoute path="/main" exact component={Autenticated} />
+      <PrivateRoute authLevel = {[EMPLOYEE]} path="/appointments" component={Appointments}  />
     </Switch>
   );
 }

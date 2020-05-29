@@ -1,16 +1,27 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
+import { useField } from "@unform/core";
 import styled from "styled-components";
 
-const Input = styled.input`
-  padding: 0.3rem;
-  transition: all 1s ease-in;
-  &:active {
-    border: 1px solid ${(p) => p.theme.colors.primary};
-    border-radius: 5px;
-  }
-  ::placeholder {
-    color: ${(p) => p.theme.colors.primary}60;
-  }
+const StyledInput = styled.input`
+  padding: 0.7rem;
+  border-radius: 5px;
+  border: 1px solid ${(p) => p.theme.colors.primary};
 `;
 
-export default Input;
+export default function Input({ name, ...rest }) {
+  const inputRef = useRef(null);
+  const { fieldName, defaultValue = "", registerField, error } = useField(name);
+  useEffect(() => {
+    registerField({
+      name: fieldName,
+      ref: inputRef.current,
+      path: "value",
+    });
+  }, [fieldName, registerField]);
+  return (
+    <>
+      {error && <strong>{error}</strong>}
+      <StyledInput ref={inputRef} defaultValue={defaultValue} {...rest} />
+    </>
+  );
+}

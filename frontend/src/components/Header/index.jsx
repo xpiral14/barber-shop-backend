@@ -12,16 +12,15 @@ import {
   fetchUserToken,
 } from "../../store/modules/auth/actions";
 import { toast } from "react-toastify";
-import Input from "../Input";
 export default function Header() {
   const dispatch = useDispatch();
-
+  const user = useSelector(s => s.user);
   return (
     <HeaderElement>
       <InfoContent>
         <UserContent>
-          <p>Samuel Reis</p>
-          <small>Barbeiro</small>
+          <p>{user.name}</p>
+          <small>{user.userTypeId}</small>
         </UserContent>
         <ImageContent>
           <img src="https://i.pravatar.cc/40" />

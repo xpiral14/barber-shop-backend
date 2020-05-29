@@ -10,6 +10,7 @@ import { ToastContainer, toast } from "react-toastify";
 import GlobalStyle from "./GlobalStyle";
 import Theme from "./Theme";
 import Routes from "./Routes";
+import Header from "./components/Header";
 
 export default function App() {
   return (

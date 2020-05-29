@@ -23,7 +23,7 @@ export default function Appointment({ pastTime, time, clientInfo, services }) {
       </div>
       <div>
         {clientInfo?.services?.map((service) => (
-          <ServiceType>
+          <ServiceType key = {service}>
             <p>{service}</p>
           </ServiceType>
         ))}
