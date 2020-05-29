@@ -1,7 +1,7 @@
-import { Op } from "sequelize";
+import { Op } from 'sequelize';
 let queryOptions = {
-  separator: "_",
-  valueSeparator: ","
+  separator: '_',
+  valueSeparator: ',',
 };
 
 /**
@@ -19,6 +19,8 @@ let queryOptions = {
 export default function queryParamToSequelizeQuery(queryParams, options = queryOptions) {
   // retorna o array com as chaves dos atributos
   let queryParamKeys = Object.keys(queryParams);
+  if (!queryParamKeys.length) return null;
+  
   let sequelizeQuery = {};
 
   // iteração sobre cada chave do objeto obtido no parâmetro
@@ -48,9 +50,9 @@ export default function queryParamToSequelizeQuery(queryParams, options = queryO
               // se o valor da parametro possuir um separador então separe-o e transforme-o em um array
               [Op[operator]]: paramValue.includes(options.valueSeparator)
                 ? paramValue.split(options.valueSeparator)
-                : paramValue
+                : paramValue,
             }
-          : paramValue
+          : paramValue,
     };
   }
   return sequelizeQuery;

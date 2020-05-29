@@ -4,6 +4,7 @@ import hashPassword from '../utils/hashPassword';
 import { registered } from '../constants/messages';
 import { EMPLOYEE, CLIENT } from '../constants/userTypes';
 import Company from './Company';
+import path from 'path'
 import Gender from './Gender';
 import UserAddress from './UserAddress';
 import UserPhone from './UserPhone';
@@ -60,6 +61,18 @@ export default class User extends Model {
                 });
             },
           },
+        },
+        perfilImage:{
+          type: DataTypes.STRING
+        },
+        perfilImageURL:{
+          type:DataTypes.VIRTUAL,
+          get: function(value){
+            return path.resolve("tmp", "perfil_images") + this.get("perfilImage")
+          }
+        },
+        birth: {
+          type: DataTypes.DATEONLY
         },
         passwordHash: {
           type: DataTypes.STRING,

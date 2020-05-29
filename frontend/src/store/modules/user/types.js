@@ -1,0 +1,3 @@
+
+
+export const FETCH_USER_SUCCESS = "@type/FETCH_USER_SUCCESS"

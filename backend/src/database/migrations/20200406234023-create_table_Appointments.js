@@ -2,7 +2,7 @@
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('UserServices', {
+    return queryInterface.createTable('Appointments', {
       id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
@@ -16,32 +16,31 @@ module.exports = {
           key: 'id',
         },
       },
-      employeeId: {
+      barberId: {
         type: Sequelize.INTEGER,
         references: {
           model: 'Users',
           key: 'id',
         },
       },
-      clientId: {
+      costumerId: {
         type: Sequelize.INTEGER,
         references: {
           model: 'Users',
           key: 'id',
         },
       },
-      appointment: {
+      appointmentAt: {
         type: Sequelize.DATE,
         allowNull: false,
-        unique: true,
       },
-      canceled_at: {
-        type: Sequelize.DATE
+      canceledAt: {
+        type: Sequelize.DATE,
       },
       serviceId: {
         type: Sequelize.INTEGER,
         references: {
-          model: 'UserServices',
+          model: 'Services',
           key: 'id',
         },
       },
@@ -55,6 +54,6 @@ module.exports = {
   },
 
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('UserServices');
+    return queryInterface.dropTable('Appointments');
   },
 };

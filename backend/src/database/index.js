@@ -19,9 +19,9 @@ class Database {
   async testConection() {
     try {
       await this.connection.authenticate();
-      console.log('connected with db');
+      console.log('connected with mariadb');
     } catch (error) {
-      console.log('error trying to connect to db');
+      console.log('error trying to connect to mariadb');
     }
   }
   async importModels() {
@@ -32,7 +32,7 @@ class Database {
       }
       let models = await Promise.all(
         files.map(async (file) => {
-          let model = (await import(path.join(__dirname, '../models', `/${file}`))).default;
+          let model = (await import(path.resolve("src", 'models', file))).default;
           model.init(this.connection);
           return model;
         })
@@ -58,4 +58,4 @@ class Database {
   }
 }
 
-new Database();
+export default new Database();
