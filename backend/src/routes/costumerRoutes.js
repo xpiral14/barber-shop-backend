@@ -8,10 +8,7 @@ import upload from '../config/multer';
 
 const costumerRouter = Router();
 
-costumerRouter.post("/",
-  upload.single("perfilImage"),
-  CostumerController.create
-);
+costumerRouter.post('/', upload.single('perfilImage'), CostumerController.create);
 costumerRouter.get('/', CostumerController.index);
 
 costumerRouter.use(authorization([COSTUMER]));
