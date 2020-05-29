@@ -4,12 +4,14 @@ import validate from '../middlewares/validate';
 import authorization from '../middlewares/authorization';
 import { BARBER } from '../constants/userTypes';
 import AppointmentController from '../controllers/AppointmentController';
+import upload from '../config/multer';
 
 const barberRouter = Router();
 
 barberRouter.post(
   '/',
-  validate(['fantasyName', 'logo', 'cnpj', 'email', 'password']),
+  // validate(['userTypeId', 'companyId', 'genderId', 'email', 'password', "name"]),
+  upload.single("perfilImage"),
   BarberController.create
 );
 
