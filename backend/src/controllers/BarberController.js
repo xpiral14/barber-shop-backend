@@ -3,11 +3,11 @@ import NotFound from '../errors/NotFound';
 import { SUCCESS, CREATED } from '../constants/HttpStatusCod';
 import queryParamToSequelizeQuery from '../utils/queryParamsToSequelizeQuery';
 import { BARBER } from '../constants/userTypes';
-
+import bcrypt from 'bcrypt';
+import { SALT } from '../constants/secrets';
 export default class BarberController {
   static async index(req, res, next) {
     try {
-      console.log(req.companyId);
       let queryParams = queryParamToSequelizeQuery(req.query);
       let barbers = await User.findAll({
         where: {
@@ -43,9 +43,15 @@ export default class BarberController {
 
   static async create(req, res, next) {
     try {
+      req.body.userTypeId = BARBER;
+      if (req.file) {
+        req.body.perfilImage = req.file.filename;
+      }
+      req.body.passwordHash = await bcrypt.hash(req.body.password, SALT);
+
       req.userTypeId = BARBER;
-      const barber = await User.create(req.data);
-      return res.status(CREATED).json(user);
+      const costumer = await User.create(req.body);
+      return res.status(CREATED).json(costumer);
     } catch (error) {
       return next(error);
     }
