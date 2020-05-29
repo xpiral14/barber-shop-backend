@@ -10,6 +10,9 @@ import helmet from 'helmet';
 import costumerRouter from './routes/costumerRoutes';
 
 import { resolve } from 'path';
+import workIntervalTimeRouter from './routes/workIntervalTimeRouter';
+import appointmentRouter from './routes/appointmentsRoutes';
+import serviceDurationTimeRouter from './routes/serviceDurationTimeRoutes';
 class App {
   constructor() {
     this.app = express();
@@ -33,6 +36,9 @@ class App {
     this.app.use('/user', userRouter);
     this.app.use('/barber', barberRouter);
     this.app.use('/costumer', costumerRouter);
+    this.app.use('/work-interval', workIntervalTimeRouter);
+    this.app.use('/appointment', appointmentRouter);
+    this.app.use('/service-duration', serviceDurationTimeRouter);
   }
 
   handleError() {
