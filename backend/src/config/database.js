@@ -6,14 +6,14 @@ module.exports = {
   host: process.env.DB_HOST,
   port: process.env.DB_PORT,
   logging: process.env.NODE_ENV === 'development' ? console.log : false,
-  dialect: 'mariadb',
   dialectOptions: {
-    timezone: 'Etc/GMT-3',
+    useUTC: false, //for reading from database
+    timezone: 'Etc/GMT0',
   },
+  dialect: 'mariadb',
   define: {
     timestamps: true,
     underscored: false,
     underscoredAll: false,
   },
-  timezone: '+6:00',
 };

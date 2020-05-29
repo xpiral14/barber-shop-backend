@@ -87,23 +87,7 @@ export default class Company extends Model {
             exclude: ['passwordHash'],
           },
         },
-        hooks: {
-          beforeCreate(model, options) {
-            let timezone = 'America/Sao_Paulo';
-            if (model.password) {
-              model.passwordHash = hashPassword(model.password);
-
-              const utcDate = parseFromTimeZone(new Date(), {
-                timeZone: 'America/Sao_Paulo',
-              });
-
-              // Set the output to "1.9.2018 18:01:36.386 GMT+02:00 (CEST)"
-              const date = new Date('2018-09-01Z16:01:36.386Z');
-              const format = 'D.M.YYYY HH:mm:ss.SSS [GMT]Z (z)';
-              const output = formatToTimeZone(date, format, { timeZone: 'Europe/Berlin' });
-            }
-          },
-        },
+        
       }
     );
   }
