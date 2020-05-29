@@ -3,6 +3,13 @@ import database from '../database';
 import Appointment from '../models/Appointment';
 import NotFound from '../errors/NotFound';
 import User from '../models/User';
+import WorkIntervalTime from '../models/WorkIntervalTime';
+import BadRequest from '../errors/BadRequest';
+import { notfound } from '../constants/messages';
+import ServiceDurationTime from '../models/ServiceDurationTime';
+import { getHours, getMinutes, format, addMinutes } from 'date-fns';
+import { pt } from 'date-fns/locale';
+
 export default class AppointmentController {
   static async index(req, res, next) {
     const { id } = req.params;
@@ -15,9 +22,7 @@ export default class AppointmentController {
         ),
       },
 
-      include: [
-        { model: User, as: 'costumer' },
-      ],
+      include: [{ model: User, as: 'costumer' }],
     });
 
     return res.json(appointments);
@@ -32,9 +37,7 @@ export default class AppointmentController {
           id: appointmentId,
           barberId: id,
         },
-        include: [
-          { model: User, as: 'costumer' },
-        ],
+        include: [{ model: User, as: 'costumer' }],
       });
 
       if (!appointment) throw new NotFound();
@@ -43,7 +46,7 @@ export default class AppointmentController {
       next(error);
     }
   }
-  
+
   static async indexByCostumer(req, res, next) {
     const { id } = req.params;
     const { date } = req.query;
@@ -55,9 +58,7 @@ export default class AppointmentController {
         ),
       },
 
-      include: [
-        { model: User, as: 'barber' }
-      ],
+      include: [{ model: User, as: 'barber' }],
     });
 
     return res.json(appointments);
@@ -82,6 +83,83 @@ export default class AppointmentController {
       return res.json(appointment);
     } catch (error) {
       next(error);
+    }
+  }
+
+  static async availableAppointments(req, res, next) {
+    const { barberId } = req.params;
+    const { date } = req.query;
+    try {
+      const workIntervalTimes = await WorkIntervalTime.findAll({
+        where: {
+          barberId,
+        },
+      });
+
+      if (!workIntervalTimes) throw new NotFound(notfound('Intervalos de trabalho'));
+      const serviceDurationTime = await ServiceDurationTime.findOne({
+        where: {
+          barberId,
+        },
+      });
+      if (!serviceDurationTime) throw new NotFound(notfound('Duração de serviço'));
+
+      const appointmentAtDate = await Appointment.findAll({
+        where: {
+          [Op.and]: Sequelize.literal(
+            `date(appointmentAt) = date(${date ? `"${date}"` : 'sysdate()'})`
+          ),
+        },
+      });
+
+      let workIntervalTimesFormatted;
+      let allIntervalTimes;
+      let eachIntervalTime;
+      // caso exista compromisso para o dia
+      if (appointmentAtDate.length) {
+        //formata o horário dos compromissos para minutos
+        let appointmentAtDateFormatted = appointmentAtDate.map(
+          (appointment) =>
+            (getHours(appointment.appointmentAt) + 3) * 60 + getMinutes(appointment.appointmentAt)
+        );
+        //formata os horários disponiveis filtrando os horários que ainda não estão marcados
+        workIntervalTimesFormatted = workIntervalTimes
+          .map(({ initialTime, finishTime }) => {
+            allIntervalTimes = [];
+            eachIntervalTime = initialTime;
+            while (eachIntervalTime <= finishTime) {
+              if (!appointmentAtDateFormatted.includes(eachIntervalTime)) {
+                allIntervalTimes.push(eachIntervalTime);
+              }
+              eachIntervalTime += serviceDurationTime.duration;
+            }
+            return allIntervalTimes;
+          })
+          .flat();
+      } else {
+        // calcula todos os horários disponíveis de acordo com o cadastro de horários iniciais e finais.
+        // é retornado em minutos
+        workIntervalTimesFormatted = workIntervalTimes
+          .map((workIntervalTime) => {
+            const { initialTime, finishTime } = workIntervalTime;
+
+            allIntervalTimes = [];
+            eachIntervalTime = initialTime;
+
+            while (eachIntervalTime <= finishTime) {
+              allIntervalTimes.push(eachIntervalTime);
+              eachIntervalTime += serviceDurationTime.duration;
+            }
+            return allIntervalTimes;
+          })
+          .flat();
+      }
+
+      const today = new Date();
+
+      return res.json(workIntervalTimesFormatted);
+    } catch (error) {
+      return next(error);
     }
   }
 }
