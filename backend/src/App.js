@@ -27,7 +27,7 @@ class App {
   }
   middlewares() {}
   routes() {
-    this.app.use('/perfilImage', express.static(resolve('tmp', 'perfil_images')));
+    this.app.use('/static/perfil', express.static(resolve('tmp', 'perfil_images')));
     this.app.use('/session', sessionRouter);
     this.app.use('/company', companyRouter);
     this.app.use('/user', userRouter);
