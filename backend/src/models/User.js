@@ -4,10 +4,11 @@ import hashPassword from '../utils/hashPassword';
 import { registered } from '../constants/messages';
 import { EMPLOYEE, CLIENT } from '../constants/userTypes';
 import Company from './Company';
-import path from 'path'
+import path from 'path';
 import Gender from './Gender';
 import UserAddress from './UserAddress';
 import UserPhone from './UserPhone';
+import { backendURL } from '../constants/urls';
 
 export default class User extends Model {
   static init(sequelize) {
@@ -62,17 +63,18 @@ export default class User extends Model {
             },
           },
         },
-        perfilImage:{
-          type: DataTypes.STRING
+        perfilImage: {
+          type: DataTypes.STRING,
         },
-        perfilImageURL:{
-          type:DataTypes.VIRTUAL,
-          get: function(value){
-            return path.resolve("tmp", "perfil_images") + this.get("perfilImage")
-          }
+        perfilImageURL: {
+          type: DataTypes.VIRTUAL,
+          get: function (value) {
+            const perfilImage = this.get('perfilImage');
+            return perfilImage ? backendURL + '/static/perfil/' + perfilImage : null;
+          },
         },
         birth: {
-          type: DataTypes.DATEONLY
+          type: DataTypes.DATEONLY,
         },
         passwordHash: {
           type: DataTypes.STRING,
