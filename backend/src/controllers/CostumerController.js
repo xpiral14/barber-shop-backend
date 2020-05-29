@@ -42,6 +42,7 @@ export default class CostumerController {
 
   static async create(req, res, next) {
     try {
+      req.body.userTypeId = COSTUMER;
       if (req.file) {
         req.body.perfilImage = req.file.filename;
       }
