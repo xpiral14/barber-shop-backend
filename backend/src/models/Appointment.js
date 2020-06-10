@@ -19,31 +19,37 @@ export default class Appointment extends Model {
             key: 'id',
           },
         },
-        serviceId: {
-          type: DataTypes.INTEGER,
-          references: {
-            model: 'Services',
-            key: 'id',
-          },
-        },
+
         barberId: {
           type: DataTypes.INTEGER,
+          allowNull: false,
           references: {
             model: 'Users',
             key: 'id',
           },
+        },
+
+        serviceId: {
+          type: DataTypes.INTEGER,
+          allowNull: false,
+          references: { model: 'Services', key: 'id' },
         },
         costumerId: {
           type: DataTypes.INTEGER,
+          allowNull: false,
           references: {
             model: 'Users',
             key: 'id',
           },
         },
-        appointmentAt: {
-          type: Sequelize.DATE,
+
+        date: {
+          type: Sequelize.DATEONLY,
           allowNull: false,
-          unique: true,
+        },
+        time: {
+          type: Sequelize.INTEGER,
+          allowNull: false,
         },
         canceledAt: {
           type: Sequelize.DATE,
@@ -63,5 +69,9 @@ export default class Appointment extends Model {
     this.belongsTo(Company);
     this.belongsTo(User, { foreignKey: 'barberId', as: 'barber' });
     this.belongsTo(User, { foreignKey: 'costumerId', as: 'costumer' });
+    this.belongsTo(models.Service, {
+      foreignKey: 'serviceId',
+      as: 'service',
+    });
   }
 }

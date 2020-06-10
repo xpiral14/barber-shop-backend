@@ -9,6 +9,9 @@ export default class Service extends Model {
           primaryKey: true,
           autoIncrement: true,
         },
+        companyId: {
+          type: DataTypes.INTEGER,
+        },
         name: {
           type: DataTypes.STRING,
         },
@@ -16,12 +19,15 @@ export default class Service extends Model {
           type: DataTypes.FLOAT(10, 2),
         },
       },
-      { sequelize }
+      { sequelize, defaultScope: { attributes: { exclude: 'companyId' } } }
     );
   }
 
   static associate(models) {
-    this.belongsToMany(models.Company, { through: 'UserServices' });
-    this.belongsToMany(models.User, { through: 'UserServices' });
+    this.belongsToMany(models.User, {
+      through: 'BarberServices',
+      foreignKey: 'serviceId',
+      as: 'barbers',
+    });
   }
 }

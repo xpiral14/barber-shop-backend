@@ -87,6 +87,7 @@ export default class User extends Model {
         },
       },
       {
+        
         sequelize,
         defaultScope: {
           include: [{ model: UserType, as: 'userType' }],
@@ -96,7 +97,6 @@ export default class User extends Model {
           include: [
             { model: UserType, as: 'userType' },
             { model: Gender, as: 'gender' },
-            { model: UserAddress, as: 'address' },
             { model: UserPhone, as: 'phones' },
           ],
         },
@@ -114,10 +114,16 @@ export default class User extends Model {
     this.belongsTo(models.Company, { as: 'company' });
     this.belongsTo(models.Gender, { as: 'gender' });
     this.belongsTo(models.UserType, { as: 'userType' });
-    this.hasMany(models.UserAddress, { as: 'address' });
     this.hasMany(models.UserPhone, { as: 'phones' });
     this.hasOne(models.ServiceDurationTime, { foreignKey: 'barberId', as: 'serviceDuration' });
     this.hasMany(models.WorkIntervalTime, { foreignKey: 'barberId', as: 'workInterval' });
+    this.belongsToMany(models.Service, {
+      through: 'BarberServices',
+      foreignKey: 'barberId',
+      as: 'services',
+    });
+    this.hasMany(models.Appointment, { foreignKey: 'costumerId', as: 'costumerAppointments' });
+    this.hasMany(models.Appointment, { foreignKey: 'barberId', as: 'barberAppointments' });
   }
 
   static findAllClients(expression) {

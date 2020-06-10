@@ -7,11 +7,11 @@ module.exports = {
       [
         {
           id:1,
-          name: "EMPLOYEE",
+          name: "BARBER",
         },
         {
           id:2,
-          name: "CLIENT",
+          name: "COSTUMER",
         },
       ],
       {}

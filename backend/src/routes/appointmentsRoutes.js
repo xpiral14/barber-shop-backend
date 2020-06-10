@@ -7,7 +7,13 @@ const appointmentRouter = Router();
 
 appointmentRouter.use(authorization([BARBER, COSTUMER]));
 appointmentRouter.get('/', AppointmentController.index);
+appointmentRouter.get('/:id', AppointmentController.show);
+appointmentRouter.get('/:id/barber', AppointmentController.showByBarber);
+appointmentRouter.get('/:id/costumer', AppointmentController.showByCostumer);
+appointmentRouter.get('/:id/service', AppointmentController.showByService);
 
-appointmentRouter.get('/:barberId/available', AppointmentController.availableAppointments);
+appointmentRouter.put('/:id', AppointmentController.update);
 
+appointmentRouter.post('/', AppointmentController.create);
+appointmentRouter.post('/:id/cancel', AppointmentController.cancel);
 export default appointmentRouter;

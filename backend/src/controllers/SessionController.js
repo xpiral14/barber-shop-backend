@@ -12,6 +12,7 @@ import { SUCCESS } from '../constants/HttpStatusCod';
 import { object, string } from 'yup';
 import Company from '../models/Company';
 import { BARBER, COSTUMER } from '../constants/userTypes';
+import UserType from '../models/UserType';
 
 export default class SessionController {
   static async authenticateBarber(req, res, next) {
@@ -51,7 +52,7 @@ export default class SessionController {
         algorithm: 'HS512',
       });
 
-      return res.status(SUCCESS).json({ token, barber });
+      return res.status(SUCCESS).json({ token, user: barber });
     } catch (error) {
       next(error);
     }
@@ -84,12 +85,45 @@ export default class SessionController {
         algorithm: 'HS512',
       });
 
-      return res.status(SUCCESS).json({ token, costumer });
+      return res.status(SUCCESS).json({ token, user: costumer });
     } catch (error) {
       next(error);
     }
   }
+  static async authenticateUser(req, res, next) {
+    try {
+      let { email, password } = req.body;
+      let user = await User.findOne({
+        where: {
+          email,
+        },
+        attributes: ['email', 'passwordHash', 'id', 'name', 'userTypeId', 'companyId', "perfilImage", "perfilImageURL"],
+        include: [
+          { model: Company, as: 'company' },
+          { model: UserType, as: 'userType' },
+        ],
+      });
+      if (!user) if (!user) throw new NotFound(notfound('cliente'));
 
+      const isValidPassword = await bcrypt.compare(password, user.passwordHash);
+
+      if (!isValidPassword) throw new BadRequest(invalidField('Senha', 'F'));
+      let payload = {
+        id: user.id,
+        level: user.userTypeId,
+        companyId: user.companyId,
+      };
+
+      const token = jwt.sign(payload, SECRET, {
+        expiresIn: EXPIRES_IN,
+        algorithm: 'HS512',
+      });
+
+      return res.status(SUCCESS).json({ token, user });
+    } catch (error) {
+      next(error);
+    }
+  }
   static async authenticateCompany(req, res, next) {
     try {
       let { email, password } = req.data;

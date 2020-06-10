@@ -2,121 +2,77 @@ import User from '../models/User';
 import NotFound from '../errors/NotFound';
 import { SUCCESS, CREATED } from '../constants/HttpStatusCod';
 import queryParamToSequelizeQuery from '../utils/queryParamsToSequelizeQuery';
+import Company from '../models/Company';
+import Gender from '../models/Gender';
+import UserPhone from '../models/UserPhone';
 
 export default class UserController {
+  static async getUser(params) {
+    const user = await User.findOne(params);
+
+    if (!user) throw new NotFound('Usuário');
+
+    return user;
+  }
+  static async show(req, res, next) {
+    const user = await User.findByPk(req.userId);
+
+    return res.json(user);
+  }
+
   static async index(req, res, next) {
     try {
-      let condition = req.query
-        ? { ...queryParamToSequelizeQuery(req.query), companyId: req.companyId }
-        : { companyId: req.companyId };
-      let users = await User.findAll({
+      let queryParams = queryParamToSequelizeQuery(req.query);
+      let barbers = await User.findAll({
         where: {
-          ...condition,
-        },
-      });
-      if (!users.length) throw new NotFound();
-      return res.json(users);
-    } catch (error) {
-      return next(error);
-    }
-  }
-
-  static async showClient(req, res, next) {
-    try {
-      let client = await User.findOneClient({
-        where: {
-          id: req.params.id,
-          companyId: req.companyId,
-        },
-        include: [],
-      });
-
-      if (!client) throw new NotFound();
-
-      return res.status(SUCCESS).json(client);
-    } catch (error) {
-      return next(error);
-    }
-  }
-
-  static async showEmployee(req, res, next) {
-    try {
-      let employee = await User.findOneEmployee({
-        where: {
-          id: req.params.id,
+          ...queryParams,
           companyId: req.companyId,
         },
       });
-
-      if (!employee) throw new NotFound();
-
-      return res.status(SUCCESS).json(employee);
+      //   if (!barbers.length) throw new NotFound();
+      return res.json(barbers);
     } catch (error) {
       return next(error);
     }
   }
 
-  static async show(req, res, next) {
+  static async showByCompany(req, res, next) {
     try {
-      const user = await User.findOne({
+      const user = await UserController.getUser({
         where: {
           id: req.params.id,
-          companyId: req.companyId,
         },
+        include: [{ model: Company, as: 'company' }],
       });
-
-      if (!user) throw new NotFound();
-
-      return res.status(SUCCESS).json(user);
+      return res.json(user.company);
     } catch (error) {
       return next(error);
     }
   }
 
-  static async create(req, res, next) {
+  static async showByGender(req, res, next) {
     try {
-      const user = await User.create(req.data);
-      return res.status(CREATED).json(user);
-    } catch (error) {
-      return next(error);
-    }
-  }
-
-  static async update(req, res, next) {
-    try {
-      let user = await User.findOne({
+      const user = await UserController.getUser({
         where: {
           id: req.params.id,
-          companyId: req.companyId,
         },
+        include: [{ model: Gender, as: 'gender' }],
       });
-
-      if (!user) throw new NotFound();
-
-      await user.update(req.data);
-
-      await user.reload();
-
-      return res.status(200).json(user);
+      return res.json(user.gender);
     } catch (error) {
       return next(error);
     }
   }
 
-  static async delete(req, res, next) {
+  static async showByPhones(req, res, next) {
     try {
-      let user = await User.findOne({
+      const user = await UserController.getUser({
         where: {
           id: req.params.id,
-          companyId: req.companyId,
         },
+        include: [{ model: UserPhone, as: 'phones' }],
       });
-
-      if (!user) throw new NotFound();
-
-      await user.destroy();
-
-      return res.status(NO_CONTENT).json();
+      return res.json(user.phones);
     } catch (error) {
       return next(error);
     }

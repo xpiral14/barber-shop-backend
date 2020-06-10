@@ -3,7 +3,8 @@ import jwt from 'jsonwebtoken';
 
 import { SECRET } from '../constants/secrets';
 import Unauthorized from '../errors/Unauthorized';
-export default function authorization(levels = [0, 1, 2]) {
+import { COSTUMER, BARBER } from '../constants/userTypes';
+export default function authorization(levels = [COSTUMER, BARBER]) {
   return async (req, res, next) => {
     try {
       const token = getToken(req.headers.authorization);

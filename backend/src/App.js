@@ -13,6 +13,8 @@ import { resolve } from 'path';
 import workIntervalTimeRouter from './routes/workIntervalTimeRouter';
 import appointmentRouter from './routes/appointmentsRoutes';
 import serviceDurationTimeRouter from './routes/serviceDurationTimeRoutes';
+import serviceRouter from './routes/serviceRoutes';
+import genderRouter from './routes/genderRoutes';
 class App {
   constructor() {
     this.app = express();
@@ -39,6 +41,8 @@ class App {
     this.app.use('/work-interval', workIntervalTimeRouter);
     this.app.use('/appointment', appointmentRouter);
     this.app.use('/service-duration', serviceDurationTimeRouter);
+    this.app.use('/service', serviceRouter);
+    this.app.use('/gender', genderRouter);
   }
 
   handleError() {
@@ -54,7 +58,7 @@ class App {
           break;
         case 'SequelizeValidationError': {
           status = BAD_REQUEST;
-          errors = err.message.replace(/Validation error: /g, '').split(',\n');
+          errors = err.message.replace(/(\w| ){1,}: /g, '').split(',\n');
           break;
         }
         case 'TokenExpiredError': {

@@ -1,8 +1,4 @@
-import { string, object, number } from 'yup';
-import { requiredField, invalidField, maxFieldSize } from '../../constants/messages';
-import BadRequest from '../../errors/BadRequest';
-
-export default class WorkIntervalValidation {
+export default class AppointmentValidation {
   static validateParams(params = []) {
     const validators = {
       id: string().matches(/\d/, invalidField('id')).required(requiredField('id')),
@@ -19,6 +15,7 @@ export default class WorkIntervalValidation {
       }
     };
   }
+
   static validateBody() {
     const bodyAtttributes = {
       initialTime: number()

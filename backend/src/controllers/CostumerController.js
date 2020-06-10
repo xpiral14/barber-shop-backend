@@ -5,36 +5,70 @@ import queryParamToSequelizeQuery from '../utils/queryParamsToSequelizeQuery';
 import { COSTUMER } from '../constants/userTypes';
 import bcrypt from 'bcrypt';
 import { SALT } from '../constants/secrets';
+import Appointment from '../models/Appointment';
+import { Op, Sequelize } from 'sequelize';
+import Service from '../models/Service';
 export default class CostumerController {
+  static async getUser(params) {
+    const user = await User.findOne(params);
+
+    if (!user) throw new NotFound();
+
+    return user;
+  }
+
   static async index(req, res, next) {
     try {
-      let queryParams = queryParamToSequelizeQuery(req.query);
       let costumers = await User.findAll({
         where: {
-          ...queryParams,
           userTypeId: COSTUMER,
+          companyId: req.companyId,
         },
       });
-      //   if (!users.length) throw new NotFound();
       return res.json(costumers);
     } catch (error) {
       return next(error);
     }
   }
-
   static async show(req, res, next) {
     try {
-      let costumer = await User.findOne({
+      let costumer = await CostumerController.getUser({
         where: {
           id: req.params.id,
           userTypeId: COSTUMER,
           companyId: req.companyId,
         },
       });
-
-      if (!costumer) throw new NotFound();
-
       return res.status(SUCCESS).json(costumer);
+    } catch (error) {
+      return next(error);
+    }
+  }
+  static async showByAppointment(req, res, next) {
+    const { from, to } = req.query;
+    try {
+      let costumer = await CostumerController.getUser({
+        where: {
+          id: req.params.id,
+          userTypeId: COSTUMER,
+          companyId: req.companyId,
+        },
+        include: {
+          model: Appointment,
+          as: 'costumerAppointments',
+          where: {
+            [Op.and]: Sequelize.literal(
+              `date(\`date\`) >= '${from}' and date(\`date\`) <= '${to}'`
+            ),
+          },
+          include: [
+            { model: User, as: 'barber' },
+            { model: Service, as: 'service' },
+          ],
+        },
+      });
+
+      return res.status(SUCCESS).json(costumer.costumerAppointments);
     } catch (error) {
       return next(error);
     }
@@ -58,15 +92,13 @@ export default class CostumerController {
 
   static async update(req, res, next) {
     try {
-      let costumer = await User.findOne({
+      let costumer = await CostumerController.getUser({
         where: {
           id: req.params.id,
           userTypeId: COSTUMER,
           companyId: req.companyId,
         },
       });
-
-      if (!costumer) throw new NotFound();
 
       await costumer.update(req.data);
 
@@ -80,16 +112,13 @@ export default class CostumerController {
 
   static async delete(req, res, next) {
     try {
-      let costumer = await User.findOne({
+      let costumer = await CostumerController.getUser({
         where: {
           id: req.params.id,
           userTypeId: COSTUMER,
           companyId: req.companyId,
         },
       });
-
-      if (!costumer) throw new NotFound();
-
       await costumer.destroy();
 
       return res.status(NO_CONTENT).json();

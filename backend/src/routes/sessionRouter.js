@@ -25,4 +25,5 @@ sessionRouter.post('/barber', SessionController.authenticateBarber);
  */
 sessionRouter.post('/company', SessionController.authenticateCompany);
 
+sessionRouter.post('/user', SessionController.authenticateUser);
 export default sessionRouter;

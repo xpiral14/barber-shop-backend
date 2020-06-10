@@ -82,7 +82,6 @@ export default function validate(fields = []) {
   });
   const schema = object(objectSchema);
   return async (req, res, next) => {
-    console.log(req.body);
     try {
       req.data = await schema.validate(req.body, { abortEarly: false });
       next();

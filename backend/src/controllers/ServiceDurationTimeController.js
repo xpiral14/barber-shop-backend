@@ -23,7 +23,6 @@ export default class ServiceDurationTimeController {
   static async create(req, res, next) {
     try {
       const { body } = req;
-      console.log(body)
       const serviceDurationTime = await
       ServiceDurationTime.create(body);
 

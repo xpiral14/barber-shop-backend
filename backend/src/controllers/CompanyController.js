@@ -5,7 +5,6 @@ import hashPassword from "../utils/hashPassword";
 
 export default class CompanyController {
   static async show(req, res, next) {
-    console.log("aqui");
     try {
       const company = await Company.findByPk(req.companyId);
       return res.status(SUCCESS).json(company);
