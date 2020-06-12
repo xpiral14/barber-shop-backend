@@ -1,4 +1,4 @@
-export default function validateCNPJ(s) {
+export default function validateCNPJ(s:string) {
   let cnpj = s.replace(/[^\d]+/g, "");
 
   // Valida a quantidade de caracteres
@@ -12,7 +12,7 @@ export default function validateCNPJ(s) {
     d = cnpj.substring(t),
     d1 = parseInt(d.charAt(0)),
     d2 = parseInt(d.charAt(1)),
-    calc = (x) => {
+    calc = (x: any) => {
       let n = cnpj.substring(0, x),
         y = x - 7,
         s = 0,
