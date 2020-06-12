@@ -18,6 +18,7 @@ module.exports = {
       },
       barberId: {
         type: Sequelize.INTEGER,
+        allowNull: false,
         references: {
           model: 'Users',
           key: 'id',
@@ -25,13 +26,18 @@ module.exports = {
       },
       costumerId: {
         type: Sequelize.INTEGER,
+        allowNull: false,
         references: {
           model: 'Users',
           key: 'id',
         },
       },
-      appointmentAt: {
+      date: {
         type: Sequelize.DATE,
+        allowNull: false,
+      },
+      time: {
+        type: Sequelize.INTEGER,
         allowNull: false,
       },
       canceledAt: {

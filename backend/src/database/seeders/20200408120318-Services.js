@@ -6,27 +6,32 @@ module.exports = {
       'Services',
       [
         {
-          id:1,
+          id: 1,
+          companyId: 1,
           name: 'Corte Masculino',
           price: 20,
         },
         {
-          id:2,
+          id: 2,
+          companyId: 1,
           name: 'Barba',
           price: 15,
         },
         {
-          id:3,
+          id: 3,
+          companyId: 1,
           name: 'Progressiva',
           price: 25,
         },
         {
-          id:4,
+          id: 4,
+          companyId: 1,
           name: 'Manutenção',
           price: 10,
         },
         {
-          id:5,
+          id: 5,
+          companyId: 1,
           name: 'Selagem',
           price: 35,
         },
