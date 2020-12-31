@@ -1,12 +1,7 @@
-import { Button } from '@material-ui/core'
 import React from 'react'
-
+import Login from './pages/Login'
 function App() {
-	return (
-		<Button variant="contained" color="secondary">
-      Hello World
-		</Button>
-	)
+	return <Login />
 }
 
 export default App
