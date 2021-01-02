@@ -21,6 +21,8 @@ import NotificationsIcon from '@material-ui/icons/Notifications'
 import { mainListItems } from './listItems'
 import ExitToAppIcon from '@material-ui/icons/ExitToApp'
 import { useHistory } from 'react-router-dom'
+import AuthService from '../services/AuthService'
+import { useSnackbar } from 'notistack'
 function Copyright() {
   return (
     <Typography variant='body2' color='textSecondary' align='center'>
@@ -118,6 +120,7 @@ const useStyles = makeStyles((theme) => ({
 const Navigation: React.FC = ({children}) => {
   const history = useHistory()
   const classes = useStyles()
+  const { enqueueSnackbar } = useSnackbar()
   const [open, setOpen] = React.useState(true)
   const handleDrawerOpen = () => {
     setOpen(true)
@@ -155,7 +158,15 @@ const Navigation: React.FC = ({children}) => {
           >
             Dashboard
           </Typography>
-          <IconButton color = "inherit" onClick = {() => history.push('/login')}>
+          <IconButton color = "inherit" onClick = { async () =>{
+            try {
+              await AuthService.logout()
+              enqueueSnackbar('Deslogado com sucesso', {variant: 'success'})
+              history.push('/login')
+            } catch (error) {
+              enqueueSnackbar(error.response.status.errors[0].message)
+            }
+          }}>
             <ExitToAppIcon />
           </IconButton>
           <IconButton color='inherit'>
