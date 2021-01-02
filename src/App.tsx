@@ -1,6 +1,6 @@
 import React from 'react'
 import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles'
-import Navigation from './Components/Navigation'
+import Routes from './Routes'
 
 const GlobalAppTheme = createMuiTheme({
   palette: {
@@ -47,7 +47,7 @@ const App: React.FC = () => {
   return (
     <>
       <ThemeProvider theme={GlobalAppTheme}>
-        <Navigation />
+        <Routes />
       </ThemeProvider>
     </>
   )
