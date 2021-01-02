@@ -1,9 +1,4 @@
 import React from 'react'
-//import Login from './Pages/Login'
-//import Dashboard from './Pages/Dashboard'
-// eslint-disable-next-line
-// import NavigationBar from './Components/NavigationBar'
-// import GlobalBar from './Components/GlobalBar'
 import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles'
 import Navigation from './Components/Navigation'
 
