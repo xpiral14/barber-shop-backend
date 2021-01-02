@@ -1,7 +1,5 @@
 import React from 'react'
-import ListItem from '@material-ui/core/ListItem'
-import ListItemIcon from '@material-ui/core/ListItemIcon'
-import ListItemText from '@material-ui/core/ListItemText'
+import ListItemLink from './ListItemLink'
 import BusinessIcon from '@material-ui/icons/Business'
 import PeopleIcon from '@material-ui/icons/People'
 import BarChartIcon from '@material-ui/icons/BarChart'
@@ -11,46 +9,12 @@ import BuildIcon from '@material-ui/icons/Build'
 
 export const mainListItems = (
   <div>
-    <ListItem button>
-      <ListItemIcon>
-        <BusinessIcon />
-      </ListItemIcon>
-      <ListItemText primary='Minha Empresa' />
-    </ListItem>
+    <ListItemLink primary = "Minha empresa" to = "/empresa" icon = {<BusinessIcon />} />
 
-    <ListItem button>
-      <ListItemIcon>
-        <PeopleIcon />
-      </ListItemIcon>
-      <ListItemText primary='Clientes' />
-    </ListItem>
-
-    <ListItem button>
-      <ListItemIcon>
-        <ReceiptIcon />
-      </ListItemIcon>
-      <ListItemText primary='Ordens de Serviço' />
-    </ListItem>
-
-    <ListItem button>
-      <ListItemIcon>
-        <BuildIcon />
-      </ListItemIcon>
-      <ListItemText primary='Estoque de Peças' />
-    </ListItem>
-
-    <ListItem button>
-      <ListItemIcon>
-        <DirectionsCarIcon />
-      </ListItemIcon>
-      <ListItemText primary='Veículos' />
-    </ListItem>
-
-    <ListItem button>
-      <ListItemIcon>
-        <BarChartIcon />
-      </ListItemIcon>
-      <ListItemText primary='Estatísticas' />
-    </ListItem>
+    <ListItemLink primary = "Clientes" to ="/clientes" icon = {<PeopleIcon />} />
+    <ListItemLink primary = "Ordem de serviço" to ="/ordens-servico" icon = {<ReceiptIcon />} />
+    <ListItemLink primary = "Estoque de peças" to ="/pecas" icon = {<BuildIcon />} />
+    <ListItemLink primary = "Veículoss" to ="/veiculos" icon = {<DirectionsCarIcon />} />
+    <ListItemLink primary = "Estatísticas" to ="/estatisticas" icon = {<BarChartIcon />} />
   </div>
 )

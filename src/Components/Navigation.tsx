@@ -19,7 +19,8 @@ import MenuIcon from '@material-ui/icons/Menu'
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft'
 import NotificationsIcon from '@material-ui/icons/Notifications'
 import { mainListItems } from './listItems'
-
+import ExitToAppIcon from '@material-ui/icons/ExitToApp'
+import { useHistory } from 'react-router-dom'
 function Copyright() {
   return (
     <Typography variant='body2' color='textSecondary' align='center'>
@@ -114,7 +115,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-const Navigation: React.FC = () => {
+const Navigation: React.FC = ({children}) => {
+  const history = useHistory()
   const classes = useStyles()
   const [open, setOpen] = React.useState(true)
   const handleDrawerOpen = () => {
@@ -153,6 +155,9 @@ const Navigation: React.FC = () => {
           >
             Dashboard
           </Typography>
+          <IconButton color = "inherit" onClick = {() => history.push('/login')}>
+            <ExitToAppIcon />
+          </IconButton>
           <IconButton color='inherit'>
             <Badge badgeContent={4} color='secondary'>
               <NotificationsIcon />
@@ -178,7 +183,9 @@ const Navigation: React.FC = () => {
       <main className={classes.content}>
         <div className={classes.appBarSpacer} />
         <Container maxWidth='lg' className={classes.container}>
-          <Grid container spacing={3}></Grid>
+          <Grid container spacing={3}>
+            {children}
+          </Grid>
           <Box pt={4}>
             <Copyright />
           </Box>
