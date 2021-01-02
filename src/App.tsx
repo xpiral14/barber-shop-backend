@@ -2,14 +2,15 @@ import React from 'react'
 //import Login from './Pages/Login'
 //import Dashboard from './Pages/Dashboard'
 // eslint-disable-next-line
-import NavigationBar from './Components/NavigationBar'
-import GlobalBar from './Components/GlobalBar'
+// import NavigationBar from './Components/NavigationBar'
+// import GlobalBar from './Components/GlobalBar'
 import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles'
+import Dashboard from './Components/Dashboard'
 
 const GlobalAppTheme = createMuiTheme({
   palette: {
     primary: {
-      main: '#ff4400',
+      main: '#008cff',
       // light: will be calculated from palette.primary.main,
       // dark: will be calculated from palette.primary.main,
       // contrastText: will be calculated to contrast with palette.primary.main
@@ -51,8 +52,7 @@ const App: React.FC = () => {
   return (
     <>
       <ThemeProvider theme={GlobalAppTheme}>
-        <GlobalBar />
-        <NavigationBar />
+        <Dashboard />
       </ThemeProvider>
     </>
   )
