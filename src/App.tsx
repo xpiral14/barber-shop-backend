@@ -5,7 +5,7 @@ import React from 'react'
 // import NavigationBar from './Components/NavigationBar'
 // import GlobalBar from './Components/GlobalBar'
 import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles'
-import Dashboard from './Components/Dashboard'
+import Navigation from './Components/Navigation'
 
 const GlobalAppTheme = createMuiTheme({
   palette: {
@@ -52,7 +52,7 @@ const App: React.FC = () => {
   return (
     <>
       <ThemeProvider theme={GlobalAppTheme}>
-        <Dashboard />
+        <Navigation />
       </ThemeProvider>
     </>
   )
