@@ -13,6 +13,10 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
 import Typography from '@material-ui/core/Typography'
 import { makeStyles } from '@material-ui/core/styles'
 import { useHistory } from 'react-router-dom'
+import { useForm } from 'react-hook-form'
+import AuthService from '../services/AuthService'
+import api from '../Config/api'
+import { useSnackbar } from 'notistack'
 
 function Copyright() {
   return (
@@ -63,6 +67,18 @@ const useStyles = makeStyles((theme) => ({
 export default function Login() {
   const classes = useStyles()
   const history = useHistory()
+  const { enqueueSnackbar } = useSnackbar()
+  const { register, handleSubmit } = useForm()
+  const handleLoginButton = async (data: any) => {
+    try {
+      const { token } = await AuthService.login(data.email, data.password)
+      api.defaults.headers.Authorization = `bearer ${token}`
+      history.push('/empresa')
+    } catch (error) {
+      enqueueSnackbar(error.response.data.errors[0].message, {variant: 'error'})
+    }
+  }
+
   return (
     <Grid container component='main' className={classes.root}>
       <CssBaseline />
@@ -75,7 +91,11 @@ export default function Login() {
           <Typography component='h1' variant='h5'>
             Sign in
           </Typography>
-          <form className={classes.form} noValidate>
+          <form
+            className={classes.form}
+            noValidate
+            onSubmit={handleSubmit(handleLoginButton)}
+          >
             <TextField
               variant='outlined'
               margin='normal'
@@ -86,6 +106,7 @@ export default function Login() {
               name='email'
               autoComplete='email'
               autoFocus
+              inputRef={register}
             />
             <TextField
               variant='outlined'
@@ -97,6 +118,7 @@ export default function Login() {
               type='password'
               id='password'
               autoComplete='current-password'
+              inputRef={register}
             />
             <FormControlLabel
               control={<Checkbox value='remember' color='primary' />}
@@ -108,7 +130,6 @@ export default function Login() {
               variant='contained'
               color='primary'
               className={classes.submit}
-              onClick = {() => history.push('/empresa')}
             >
               Sign In
             </Button>
