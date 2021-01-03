@@ -2,6 +2,7 @@ import React from 'react'
 import { ThemeProvider, createMuiTheme } from '@material-ui/core/styles'
 import Routes from './Routes'
 import { SnackbarProvider } from 'notistack'
+import UserDataProvider from './context/UserData'
 
 const GlobalAppTheme = createMuiTheme({
   palette: {
@@ -47,9 +48,11 @@ const GlobalAppTheme = createMuiTheme({
 const App: React.FC = () => {
   return (
     <SnackbarProvider maxSnack = {3}>
-      <ThemeProvider theme={GlobalAppTheme}>
-        <Routes />
-      </ThemeProvider>
+      <UserDataProvider>
+        <ThemeProvider theme={GlobalAppTheme}>
+          <Routes />
+        </ThemeProvider>
+      </UserDataProvider>
     </SnackbarProvider>
   )
 }
