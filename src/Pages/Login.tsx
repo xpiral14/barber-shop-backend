@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import Avatar from '@material-ui/core/Avatar'
 import Button from '@material-ui/core/Button'
 import CssBaseline from '@material-ui/core/CssBaseline'
@@ -13,6 +13,11 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
 import Typography from '@material-ui/core/Typography'
 import { makeStyles } from '@material-ui/core/styles'
 import { useHistory } from 'react-router-dom'
+import { useForm } from 'react-hook-form'
+import AuthService from '../services/AuthService'
+import api from '../Config/api'
+import { useSnackbar } from 'notistack'
+import { userDataContext } from '../context/UserData'
 
 function Copyright() {
   return (
@@ -63,6 +68,20 @@ const useStyles = makeStyles((theme) => ({
 export default function Login() {
   const classes = useStyles()
   const history = useHistory()
+  const { enqueueSnackbar } = useSnackbar()
+  const { register, handleSubmit } = useForm()
+  const {setUser} = useContext(userDataContext)
+  const handleLoginButton = async (data: any) => {
+    try {
+      const { token, user } = await AuthService.login(data.email, data.password)
+      api.defaults.headers.Authorization = `bearer ${token}`
+      setUser?.(user)
+      history.push('/empresa')
+    } catch (error) {
+      enqueueSnackbar(error.response.data.errors[0].message, {variant: 'error'})
+    }
+  }
+
   return (
     <Grid container component='main' className={classes.root}>
       <CssBaseline />
@@ -75,7 +94,11 @@ export default function Login() {
           <Typography component='h1' variant='h5'>
             Sign in
           </Typography>
-          <form className={classes.form} noValidate>
+          <form
+            className={classes.form}
+            noValidate
+            onSubmit={handleSubmit(handleLoginButton)}
+          >
             <TextField
               variant='outlined'
               margin='normal'
@@ -86,6 +109,7 @@ export default function Login() {
               name='email'
               autoComplete='email'
               autoFocus
+              inputRef={register}
             />
             <TextField
               variant='outlined'
@@ -97,6 +121,7 @@ export default function Login() {
               type='password'
               id='password'
               autoComplete='current-password'
+              inputRef={register}
             />
             <FormControlLabel
               control={<Checkbox value='remember' color='primary' />}
@@ -108,7 +133,6 @@ export default function Login() {
               variant='contained'
               color='primary'
               className={classes.submit}
-              onClick = {() => history.push('/empresa')}
             >
               Sign In
             </Button>

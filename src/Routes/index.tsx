@@ -13,6 +13,7 @@ const Routes = () => {
   return (
     <BrowserRouter>
       <Switch>
+        <ReactDomRoute path = "/" exact component = {Login} />
         <ReactDomRoute path = "/login" component = {Login} />
         <Route path = "/empresa" component = {Company} />
         <Route path = "/clientes" component = {Clients} />
