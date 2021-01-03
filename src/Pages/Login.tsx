@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import Avatar from '@material-ui/core/Avatar'
 import Button from '@material-ui/core/Button'
 import CssBaseline from '@material-ui/core/CssBaseline'
@@ -17,6 +17,7 @@ import { useForm } from 'react-hook-form'
 import AuthService from '../services/AuthService'
 import api from '../Config/api'
 import { useSnackbar } from 'notistack'
+import { userDataContext } from '../context/UserData'
 
 function Copyright() {
   return (
@@ -69,10 +70,12 @@ export default function Login() {
   const history = useHistory()
   const { enqueueSnackbar } = useSnackbar()
   const { register, handleSubmit } = useForm()
+  const {setUser} = useContext(userDataContext)
   const handleLoginButton = async (data: any) => {
     try {
-      const { token } = await AuthService.login(data.email, data.password)
+      const { token, user } = await AuthService.login(data.email, data.password)
       api.defaults.headers.Authorization = `bearer ${token}`
+      setUser?.(user)
       history.push('/empresa')
     } catch (error) {
       enqueueSnackbar(error.response.data.errors[0].message, {variant: 'error'})
