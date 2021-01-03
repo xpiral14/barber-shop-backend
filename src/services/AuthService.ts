@@ -1,9 +1,11 @@
 import api from '../Config/api'
+import User from '../Models/User'
 
 type LoginResponse = {
   type: string
   token: string
-  expires_at: string
+  expires_at: string,
+  user: User
 }
 export default class AuthService {
   public static async login(email: string, password: string) {
