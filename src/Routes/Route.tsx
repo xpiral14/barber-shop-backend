@@ -1,15 +1,28 @@
-import React, { FC } from 'react'
-import { Route as ReactDomRoute, RouteProps as ReactDomRouteProps } from 'react-router-dom'
+import React, { FC, useContext, useEffect } from 'react'
+import {
+  Route as ReactDomRoute,
+  RouteProps as ReactDomRouteProps,
+  useHistory,
+} from 'react-router-dom'
 import Navigation from '../Components/Navigation'
+import { userDataContext } from '../context/UserData'
 
-interface RouteProps extends ReactDomRouteProps{
+interface RouteProps extends ReactDomRouteProps {
   component: React.FC<any>
 }
 
 const Route: FC<RouteProps> = ({ component: Component, ...rest }) => {
-  console.log('renderizei!')
+  const { user } = useContext(userDataContext)
+  const history = useHistory()
+
+  useEffect(() => {
+    if (!user) {
+      history.push('/login')
+    }
+  }, [user])
+
   return (
-    <ReactDomRoute 
+    <ReactDomRoute
       render={(props) => (
         <Navigation>
           <Component {...props} />
