@@ -27,7 +27,7 @@ function Copyright() {
     <Typography variant='body2' color='textSecondary' align='center'>
       {'Copyright © '}
       <Link color='inherit' href='https://material-ui.com/'>
-        Your Website
+        MMS Frontend
       </Link>{' '}
       {new Date().getFullYear()}
       {'.'}
@@ -115,7 +115,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-const Navigation: React.FC = ({children}) => {
+const Navigation: React.FC = ({ children }) => {
   const history = useHistory()
   const classes = useStyles()
   const { enqueueSnackbar } = useSnackbar()
@@ -156,15 +156,18 @@ const Navigation: React.FC = ({children}) => {
           >
             Dashboard
           </Typography>
-          <IconButton color = "inherit" onClick = { async () =>{
-            try {
-              await AuthService.logout()
-              enqueueSnackbar('Deslogado com sucesso', {variant: 'success'})
-              history.push('/login')
-            } catch (error) {
-              enqueueSnackbar(error.response.status.errors[0].message)
-            }
-          }}>
+          <IconButton
+            color='inherit'
+            onClick={async () => {
+              try {
+                await AuthService.logout()
+                enqueueSnackbar('Deslogado com sucesso', { variant: 'success' })
+                history.push('/login')
+              } catch (error) {
+                enqueueSnackbar(error.response.status.errors[0].message)
+              }
+            }}
+          >
             <ExitToAppIcon />
           </IconButton>
           <IconButton color='inherit'>
