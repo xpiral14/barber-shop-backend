@@ -21,11 +21,7 @@ const Routes = () => {
         <Route path='/ordens-servico' component={Orders} />
         <Route path='/pecas' component={Pieces} />
         <Route path='/veiculos' component={Vehicles} exact />
-        <Route
-          path='/veiculos/detalhes/:vehicleId'
-          component={VehicleDetails}
-          render={ (props) => ( <VehicleDetails { ...props } ) /> }
-        />
+        <Route path='/veiculos/detalhes/:vehicleId' component={VehicleDetails} />
         <Route path='/estatisticas' component={Estatistics} />
       </Switch>
     </BrowserRouter>
