@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import Vehicle from '../../Models/Vehicle'
 import VehicleService from '../../services/VehicleService'
+import formatLicensePlate from '../../Util/formatLicensePlate'
 import { makeStyles } from '@material-ui/core/styles'
 import Card from '@material-ui/core/Card'
 import CardActionArea from '@material-ui/core/CardActionArea'
@@ -43,7 +44,7 @@ const Vehicles: React.FC = () => {
                   component='img'
                   alt='Contemplative Reptile'
                   height='140'
-                  image='/Images/car.jpg'
+                  image={vehicle.imageUrl || '/Images/car-placeholder.jpg'}
                   title='Contemplative Reptile'
                 />
                 <CardContent>
@@ -51,12 +52,14 @@ const Vehicles: React.FC = () => {
                     {vehicle.model}
                   </Typography>
                   <span>{vehicle.make}</span>
-                  <br></br>
+                  <br />
+                  <span>
+                    <b>Placa: {formatLicensePlate(vehicle?.licensePlate)}</b>
+                  </span>
+                  <br />
                   <span>
                     <b>
-                      {vehicle.licensePlate
-                        .toUpperCase()
-                        .replace(/(\w{3})(\d{4})/, '$1-$2')}
+                      Ano: {vehicle?.year} / Modelo: {vehicle?.year}
                     </b>
                   </span>
                 </CardContent>
@@ -69,7 +72,7 @@ const Vehicles: React.FC = () => {
                     history.push(`/veiculos/detalhes/${vehicle.id}`)
                   }
                 >
-                  Detalhes
+                  Detalhes do Veículo
                 </Button>
               </CardActions>
             </Card>
