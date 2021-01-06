@@ -22,12 +22,13 @@ import ExitToAppIcon from '@material-ui/icons/ExitToApp'
 import { useHistory } from 'react-router-dom'
 import AuthService from '../services/AuthService'
 import { useSnackbar } from 'notistack'
+
 function Copyright() {
   return (
     <Typography variant='body2' color='textSecondary' align='center'>
       {'Copyright © '}
       <Link color='inherit' href='https://material-ui.com/'>
-        MMS Frontend
+        MMS - Mechanic Management System
       </Link>{' '}
       {new Date().getFullYear()}
       {'.'}
@@ -154,7 +155,7 @@ const Navigation: React.FC = ({ children }) => {
             noWrap
             className={classes.title}
           >
-            Dashboard
+
           </Typography>
           <IconButton
             color='inherit'
