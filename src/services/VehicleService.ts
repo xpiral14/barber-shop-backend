@@ -1,6 +1,6 @@
 import api from '../Config/api'
-import Metadata from '../Models/Metadata'
-import Vehicle from '../Models/Vehicle'
+import Metadata from '../Contracts/Models/Metadata'
+import Vehicle from '../Contracts/Models/Vehicle'
 
 export default class VehicleService {
   static defaultPath = '/company/vehicle'
