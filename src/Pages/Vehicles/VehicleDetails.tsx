@@ -1,4 +1,11 @@
-import { Button, Card, Grid, IconButton, Typography } from '@material-ui/core/'
+import {
+  Button,
+  Card,
+  CircularProgress,
+  Grid,
+  IconButton,
+  Typography,
+} from '@material-ui/core/'
 import Breadcrumbs from '@material-ui/core/Breadcrumbs'
 import Divider from '@material-ui/core/Divider'
 import Link, { LinkProps } from '@material-ui/core/Link'
@@ -35,6 +42,10 @@ const useStyles = makeStyles((theme) => ({
   grid: {
     height: '100%',
     width: '100%',
+  },
+  backdrop: {
+    zIndex: theme.zIndex.drawer + 1,
+    color: '#fff',
   },
   card: {
     width: '100%',
@@ -105,10 +116,12 @@ const VehicleDetails: React.FC = () => {
   const maskFirst = /((^\d{1,3})(\.|,))+?/gm
 
   useEffect(() => {
-    (async function () {
-      const vehicle = await VehicleService.getOne(+match.params.vehicleId)
-      setVehicle(vehicle)
-    })()
+    setTimeout(() => {
+      (async function () {
+        const vehicle = await VehicleService.getOne(+match.params.vehicleId)
+        setVehicle(vehicle)
+      })()
+    }, 400)
   }, [])
 
   useEffect(() => {
@@ -162,40 +175,37 @@ const VehicleDetails: React.FC = () => {
       }
     }
   }
-  
+
   const handleButtonCancelEditVehicleDetailsOnClick = () => {
     setVehicleEditMode(false)
   }
 
   return (
     <Grid container spacing={3} className={classes.grid}>
-      {vehicle && (
+      <Grid container xs={12} alignItems='center'>
+        <div>
+          <IconButton aria-label='backOnePage' onClick={() => history.goBack()}>
+            <ArrowBackIcon />
+          </IconButton>
+        </div>
+
+        <div>
+          <Breadcrumbs aria-label='breadcrumb'>
+            <LinkRouter color='inherit' to='/empresa'>
+              Minha Empresa
+            </LinkRouter>
+            <LinkRouter color='inherit' to='/veiculos'>
+              Veículos
+            </LinkRouter>
+            <span className={classes.breadcrumbCurrent}>
+              {vehicle ? `${vehicle?.make} ${vehicle?.model}` : ''}
+            </span>
+          </Breadcrumbs>
+        </div>
+      </Grid>
+
+      {vehicle ? (
         <>
-          <Grid container xs={12} alignItems='center'>
-            <div>
-              <IconButton
-                aria-label='backOnePage'
-                onClick={() => history.goBack()}
-              >
-                <ArrowBackIcon />
-              </IconButton>
-            </div>
-
-            <div>
-              <Breadcrumbs aria-label='breadcrumb'>
-                <LinkRouter color='inherit' to='/empresa'>
-                  Minha Empresa
-                </LinkRouter>
-                <LinkRouter color='inherit' to='/veiculos'>
-                  Veículos
-                </LinkRouter>
-                <span
-                  className={classes.breadcrumbCurrent}
-                >{`${vehicle?.make} ${vehicle?.model}`}</span>
-              </Breadcrumbs>
-            </div>
-          </Grid>
-
           <Grid item xs={12} sm={6} style={{ height: '372px' }}>
             <Card
               className={classes.card}
@@ -522,7 +532,9 @@ const VehicleDetails: React.FC = () => {
                               variant='contained'
                               color='secondary'
                               startIcon={<CancelIcon />}
-                              onClick={handleButtonCancelEditVehicleDetailsOnClick}
+                              onClick={
+                                handleButtonCancelEditVehicleDetailsOnClick
+                              }
                             >
                               Cancelar
                             </Button>
@@ -545,6 +557,15 @@ const VehicleDetails: React.FC = () => {
             </Card>
           </Grid>
         </>
+      ) : (
+        <Grid
+          container
+          justify='center'
+          alignItems='center'
+          style={{ marginTop: '5rem', marginBottom: '5rem' }}
+        >
+          <CircularProgress color='primary' size={'4rem'} />
+        </Grid>
       )}
     </Grid>
   )
