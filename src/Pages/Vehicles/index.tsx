@@ -1,5 +1,19 @@
-import { Button, Card, CardActionArea, CardActions, CardContent, CardMedia, Grid, Typography } from '@material-ui/core/'
-import { default as Breadcrumbs, default as IconButton } from '@material-ui/core/Breadcrumbs'
+import {
+  Button,
+  ButtonGroup,
+  Card,
+  CardActionArea,
+  CardActions,
+  CardContent,
+  CardMedia,
+  Grid,
+  Typography,
+} from '@material-ui/core/'
+import {
+  default as Breadcrumbs,
+  default as IconButton,
+} from '@material-ui/core/Breadcrumbs'
+import { Add as AddIcon, Search as SearchIcon } from '@material-ui/icons'
 import Link, { LinkProps } from '@material-ui/core/Link'
 import { makeStyles } from '@material-ui/core/styles'
 import ArrowBackIcon from '@material-ui/icons/ArrowBack'
@@ -11,6 +25,8 @@ import formatLicensePlate from '../../Util/formatLicensePlate'
 
 const useStyles = makeStyles({
   root: {
+    flexGrow: 1,
+    minWidth: 275,
     maxWidth: 345,
   },
   breadcrumbCurrent: {
@@ -24,9 +40,7 @@ const useStyles = makeStyles({
 
 const Vehicles: React.FC = () => {
   const history = useHistory()
-
   const [vehicles, setVehicles] = useState<Vehicle[]>([])
-
   const classes = useStyles()
 
   useEffect(() => {
@@ -44,14 +58,17 @@ const Vehicles: React.FC = () => {
   const LinkRouter = (props: LinkRouterProps) => (
     <Link {...props} component={RouterLink as any} />
   )
-
+  
   return (
     <Grid container spacing={3} className={classes.grid}>
       {vehicles && (
         <>
-          <Grid container xs={12} alignItems='center'>
+          <Grid container xs={6} alignItems='center'>
             <div>
-              <IconButton aria-label='backOnePage'>
+              <IconButton
+                aria-label='backOnePage'
+                onClick={() => history.goBack()}
+              >
                 <ArrowBackIcon />
               </IconButton>
             </div>
@@ -61,22 +78,38 @@ const Vehicles: React.FC = () => {
                 <LinkRouter color='inherit' to='/empresa'>
                   Minha Empresa
                 </LinkRouter>
-                <span className={classes.breadcrumbCurrent}>Veículos</span>
+                <span className={classes.breadcrumbCurrent}>Veículos ({vehicles?.length})</span>
               </Breadcrumbs>
             </div>
+          </Grid>
+
+          {/* Total? */}
+          <Grid container xs={6} justify='flex-end' alignContent='center'>
+
+            <ButtonGroup color='primary' variant='contained' size='small' aria-label='small button group'>
+              <Button onClick={() => history.push('/veiculos/adicionar')}>
+                <AddIcon />
+                Adicionar
+              </Button>
+              <Button onClick={() => console.log('handleButtonSearchForVehicleOnClick')}>
+                <SearchIcon />
+                Filtrar
+              </Button>
+            </ButtonGroup>
+
           </Grid>
 
           {!!vehicles.length &&
             vehicles.map((vehicle) => (
               <Grid item xs={3} key={vehicle.id}>
-                <Card className={classes.root}>
+                <Card>
                   <CardActionArea>
                     <CardMedia
                       component='img'
-                      alt='Contemplative Reptile'
+                      alt='Car Image'
                       height='140'
                       image={vehicle.imageUrl || '/Images/car-placeholder.jpg'}
-                      title='Contemplative Reptile'
+                      title='Car Image'
                     />
                     <CardContent>
                       <Typography gutterBottom variant='h5' component='h2'>

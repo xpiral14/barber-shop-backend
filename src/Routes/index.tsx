@@ -8,6 +8,7 @@ import Orders from '../Pages/Orders'
 import Pieces from '../Pages/Pieces'
 import Vehicles from '../Pages/Vehicles'
 import VehicleDetails from '../Pages/Vehicles/VehicleDetails'
+import VehicleAdd from '../Pages/Vehicles/VehicleAdd'
 import Route from './Route'
 
 const Routes = () => {
@@ -21,7 +22,8 @@ const Routes = () => {
         <Route path='/ordens-servico' component={Orders} />
         <Route path='/pecas' component={Pieces} />
         <Route path='/veiculos' component={Vehicles} exact />
-        <Route path='/veiculos/detalhes/:vehicleId' component={VehicleDetails} />
+        <Route path='/veiculos/detalhes/:vehicleId' component={VehicleDetails} exact />
+        <Route path='/veiculos/adicionar' component={VehicleAdd} exact />
         <Route path='/estatisticas' component={Estatistics} />
       </Switch>
     </BrowserRouter>

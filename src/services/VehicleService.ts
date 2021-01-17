@@ -34,4 +34,9 @@ export default class VehicleService {
     await api.put(`${this.defaultPath}/${vehicleId}`, vehicleData)
     return true
   }
+
+  static async delete(vehicleId?: number) {
+    await api.delete(`${this.defaultPath}/${vehicleId}`)
+    return true
+  }
 }
