@@ -7,15 +7,16 @@ import {
   CardContent,
   CardMedia,
   Grid,
+  Modal,
   Typography,
 } from '@material-ui/core/'
 import {
   default as Breadcrumbs,
   default as IconButton,
 } from '@material-ui/core/Breadcrumbs'
-import { Add as AddIcon, Search as SearchIcon } from '@material-ui/icons'
 import Link, { LinkProps } from '@material-ui/core/Link'
 import { makeStyles } from '@material-ui/core/styles'
+import { Add as AddIcon, Search as SearchIcon } from '@material-ui/icons'
 import ArrowBackIcon from '@material-ui/icons/ArrowBack'
 import React, { useEffect, useState } from 'react'
 import { Link as RouterLink, useHistory } from 'react-router-dom'
@@ -42,6 +43,7 @@ const Vehicles: React.FC = () => {
   const history = useHistory()
   const [vehicles, setVehicles] = useState<Vehicle[]>([])
   const classes = useStyles()
+  const [modal, setModal] = useState(false)
 
   useEffect(() => {
     (async function () {
@@ -58,7 +60,7 @@ const Vehicles: React.FC = () => {
   const LinkRouter = (props: LinkRouterProps) => (
     <Link {...props} component={RouterLink as any} />
   )
-  
+
   return (
     <Grid container spacing={3} className={classes.grid}>
       {vehicles && (
@@ -78,25 +80,29 @@ const Vehicles: React.FC = () => {
                 <LinkRouter color='inherit' to='/empresa'>
                   Minha Empresa
                 </LinkRouter>
-                <span className={classes.breadcrumbCurrent}>Veículos ({vehicles?.length})</span>
+                <span className={classes.breadcrumbCurrent}>
+                  Veículos ({vehicles?.length})
+                </span>
               </Breadcrumbs>
             </div>
           </Grid>
 
-          {/* Total? */}
           <Grid container xs={6} justify='flex-end' alignContent='center'>
-
-            <ButtonGroup color='primary' variant='contained' size='small' aria-label='small button group'>
+            <ButtonGroup
+              color='primary'
+              variant='contained'
+              size='small'
+              aria-label='small button group'
+            >
               <Button onClick={() => history.push('/veiculos/adicionar')}>
                 <AddIcon />
                 Adicionar
               </Button>
-              <Button onClick={() => console.log('handleButtonSearchForVehicleOnClick')}>
+              <Button onClick={() => setModal(true)}>
                 <SearchIcon />
                 Filtrar
               </Button>
             </ButtonGroup>
-
           </Grid>
 
           {!!vehicles.length &&
@@ -140,6 +146,15 @@ const Vehicles: React.FC = () => {
                 </Card>
               </Grid>
             ))}
+
+          <Modal
+            open={modal}
+            onClose={() => console.log('modal')}
+            aria-labelledby='simple-modal-title'
+            aria-describedby='simple-modal-description'
+          >
+            <p>teste</p>
+          </Modal>
         </>
       )}
     </Grid>
