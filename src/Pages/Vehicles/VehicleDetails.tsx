@@ -5,6 +5,8 @@ import {
   Grid,
   IconButton,
   Typography,
+  Select,
+  MenuItem,
 } from '@material-ui/core/'
 import Breadcrumbs from '@material-ui/core/Breadcrumbs'
 import Divider from '@material-ui/core/Divider'
@@ -24,6 +26,8 @@ import { useContext, useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { default as NumberFormat } from 'react-number-format'
 import { Link as RouterLink, useHistory, useRouteMatch } from 'react-router-dom'
+//to be solved later
+//eslint-disable-next-line
 import InputMask from '../../Components/InputMask'
 import { userDataContext } from '../../context/UserData'
 import { fuelType } from '../../Contracts/Enums'
@@ -108,12 +112,10 @@ const VehicleDetails: React.FC = () => {
   const [vehicle, setVehicle] = useState<Vehicle | undefined>(undefined)
   const [vehicleEditMode, setVehicleEditMode] = useState(false)
   const [company, setCompany] = useState<CompanyModel | null>(null)
-  const { register, handleSubmit } = useForm()
+  const { register, handleSubmit, setValue } = useForm()
   const { enqueueSnackbar } = useSnackbar()
   const { user } = useContext(userDataContext)
   const classes = useStyles()
-
-  const maskFirst = /((^\d{1,3})(\.|,))+?/gm
 
   useEffect(() => {
     setTimeout(() => {
@@ -136,21 +138,9 @@ const VehicleDetails: React.FC = () => {
   }, [])
 
   const onSubmit = async (data: any) => {
+    console.log(data)
     try {
-      await CompanyService.update(user?.companyId, data)
-      enqueueSnackbar('Empresa atualizada com sucesso!', { variant: 'success' })
-    } catch (error) {
-      if (error.response) {
-        error.response.data.errors.forEach((err: any) => {
-          enqueueSnackbar(err.message, { variant: 'error' })
-        })
-      }
-    }
-  }
-
-  const handleButtonSaveVehicleDetailsOnClick = async () => {
-    try {
-      await VehicleService.update(vehicle?.id, vehicle)
+      await VehicleService.update(vehicle?.id, data)
       setVehicleEditMode(false)
       enqueueSnackbar('Veículo atualizado com sucesso!', { variant: 'success' })
     } catch (error) {
@@ -164,7 +154,7 @@ const VehicleDetails: React.FC = () => {
 
   const handleButtonDeleteVehicleOnClick = async () => {
     try {
-      await VehicleService.delete()
+      await VehicleService.delete(vehicle?.id)
       enqueueSnackbar('Veículo deletado com sucesso!', { variant: 'success' })
       history.goBack()
     } catch (error) {
@@ -200,6 +190,7 @@ const VehicleDetails: React.FC = () => {
             <span className={classes.breadcrumbCurrent}>
               {vehicle ? `${vehicle?.make} ${vehicle?.model}` : ''}
             </span>
+            {vehicleEditMode && <EditIcon />}
           </Breadcrumbs>
         </div>
       </Grid>
@@ -384,8 +375,8 @@ const VehicleDetails: React.FC = () => {
                             <Grid item xs={6}>
                               <TextField
                                 defaultValue={vehicle?.year}
-                                id='model'
-                                name='model'
+                                id='year'
+                                name='year'
                                 label='Ano Fabricação'
                                 inputRef={register({ required: true })}
                                 autoComplete='shipping address-line1'
@@ -405,8 +396,8 @@ const VehicleDetails: React.FC = () => {
                             <Grid item xs={6}>
                               <TextField
                                 defaultValue={vehicle?.yearModel}
-                                id='model'
-                                name='model'
+                                id='yearModel'
+                                name='yearModel'
                                 label='Ano Modelo'
                                 inputRef={register({ required: true })}
                                 autoComplete='shipping address-line1'
@@ -428,8 +419,8 @@ const VehicleDetails: React.FC = () => {
                             <Grid item xs={6}>
                               <TextField
                                 defaultValue={vehicle?.color}
-                                id='make'
-                                name='make'
+                                id='color'
+                                name='color'
                                 label='Cor'
                                 fullWidth
                                 className={classes.input}
@@ -452,8 +443,8 @@ const VehicleDetails: React.FC = () => {
                                 defaultValue={formatLicensePlate(
                                   vehicle?.licensePlate
                                 )}
-                                id='model'
-                                name='model'
+                                id='licensePlate'
+                                name='licensePlate'
                                 label='Placa'
                                 fullWidth
                                 inputRef={register({ required: true })}
@@ -474,18 +465,16 @@ const VehicleDetails: React.FC = () => {
 
                           <Grid container spacing={3}>
                             <Grid item xs={6}>
-                              <InputMask
+                              <TextField
                                 defaultValue={vehicle?.kmDriven}
-                                id='make'
-                                name='make'
+                                id='kmDriven'
+                                name='kmDriven'
                                 label='Quilometragem'
                                 fullWidth
                                 className={classes.input}
                                 inputRef={register}
                                 autoComplete='given-name'
                                 required
-                                variant='standard'
-                                mask={[maskFirst]}
                                 onChange={(
                                   evt: React.ChangeEvent<HTMLInputElement>
                                 ) => {
@@ -498,25 +487,27 @@ const VehicleDetails: React.FC = () => {
                             </Grid>
 
                             <Grid item xs={6}>
-                              <TextField
+                              <Select
                                 defaultValue={vehicle?.fuelType}
-                                id='model'
-                                name='model'
+                                id='fuelType'
+                                name='fuelType'
+                                ref={register}
                                 label='Combustível'
                                 fullWidth
-                                inputRef={register({ required: true })}
                                 autoComplete='shipping address-line1'
                                 className={classes.input}
                                 required
-                                onChange={(
-                                  evt: React.ChangeEvent<HTMLInputElement>
-                                ) => {
-                                  setVehicle((prev: any) => ({
-                                    ...prev,
-                                    fuelType: evt.target.value,
-                                  }))
+                                onChange={(evt) => {
+                                  console.log(evt.target.value, evt.target.name)
+                                  setValue(evt.target.name as string, evt.target.value)
                                 }}
-                              />
+                              >
+                                {Object.keys(fuelType).map((fuelKey) => (
+                                  <MenuItem key={fuelKey} value={fuelKey}>
+                                    {fuelType[fuelKey as keyof typeof fuelType]}
+                                  </MenuItem>
+                                ))}
+                              </Select>
                             </Grid>
                           </Grid>
 
@@ -543,7 +534,7 @@ const VehicleDetails: React.FC = () => {
                               variant='contained'
                               color='primary'
                               startIcon={<SaveIcon />}
-                              onClick={handleButtonSaveVehicleDetailsOnClick}
+                              type='submit'
                             >
                               Salvar
                             </Button>

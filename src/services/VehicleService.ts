@@ -5,10 +5,10 @@ import Vehicle from '../Contracts/Models/Vehicle'
 export default class VehicleService {
   static defaultPath = '/company/vehicle'
 
-  static async create() {
-    const response = api.post<Vehicle[]>(`${this.defaultPath}`)
+  static async create(vehicleData: Vehicle) {
+    const response = api.post<Vehicle[]>(`${this.defaultPath}`, vehicleData)
 
-    return await response
+    return (await response).data
   }
 
   static async getAll(page: number, limit: number) {

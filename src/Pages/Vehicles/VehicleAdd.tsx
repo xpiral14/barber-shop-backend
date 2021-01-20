@@ -1,20 +1,26 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import { ButtonGroup, Paper } from '@material-ui/core'
-import { Button, Card, Grid, IconButton } from '@material-ui/core/'
+import {
+  Button,
+  Card,
+  Grid,
+  IconButton,
+  Select,
+  MenuItem,
+} from '@material-ui/core/'
 import Breadcrumbs from '@material-ui/core/Breadcrumbs'
 import Link, { LinkProps } from '@material-ui/core/Link'
 import { makeStyles } from '@material-ui/core/styles'
 import TextField from '@material-ui/core/TextField'
 import {
   ArrowBack as ArrowBackIcon,
-  Edit as EditIcon,
-  Save as SaveIcon
+  Cancel as CancelIcon,
+  Save as SaveIcon,
 } from '@material-ui/icons/'
 import { useSnackbar } from 'notistack'
-import { default as React, useContext, useEffect, useState } from 'react'
-import { useForm } from 'react-hook-form'
+import { useContext, useEffect, useState } from 'react'
+import { useForm, useWatch } from 'react-hook-form'
 import { Link as RouterLink, useHistory, useRouteMatch } from 'react-router-dom'
 import { userDataContext } from '../../context/UserData'
+import { fuelType } from '../../Contracts/Enums'
 import CompanyModel from '../../Contracts/Models/Company'
 import Vehicle from '../../Contracts/Models/Vehicle'
 import CompanyService from '../../services/CompanyService'
@@ -30,22 +36,14 @@ const useStyles = makeStyles((theme) => ({
     height: '100%',
     width: '100%',
   },
+  backdrop: {
+    zIndex: theme.zIndex.drawer + 1,
+    color: '#fff',
+  },
   card: {
     width: '100%',
     height: '100%',
     padding: '2rem',
-  },
-  container: {
-    padding: theme.spacing(2),
-    width: '100%',
-  },
-  input: {
-    marginTop: theme.spacing(2),
-  },
-  buttonGroup: {
-    marginTop: theme.spacing(2),
-    display: 'flex',
-    justifyContent: 'flex-end',
   },
   paper: {
     height: 140,
@@ -74,6 +72,18 @@ const useStyles = makeStyles((theme) => ({
   breadcrumbCurrent: {
     color: '#000000',
   },
+  input: {
+    marginTop: theme.spacing(2),
+    width: '100%',
+  },
+  buttonGroup: {
+    marginTop: theme.spacing(2),
+    display: 'flex',
+    justifyContent: 'flex-end',
+  },
+  divFormTextField: {
+    display: 'flex',
+  },
 }))
 
 interface LinkRouterProps extends LinkProps {
@@ -85,29 +95,34 @@ const LinkRouter = (props: LinkRouterProps) => (
   <Link {...props} component={RouterLink as any} />
 )
 
-const VehicleAdd: React.FC = () => {
-  //eslint-disable-next-line
+const VehicleDetails: React.FC = () => {
   const history = useHistory()
   const match = useRouteMatch<{ vehicleId: string }>()
-  const [vehicle, setVehicle] = useState<Vehicle | null>(null)
+  const [vehicle, setVehicle] = useState<Vehicle | undefined>(undefined)
   const [company, setCompany] = useState<CompanyModel | null>(null)
-  const { register, handleSubmit } = useForm()
+  const { register, handleSubmit, setValue, control } = useForm()
+  const watchImageInput = useWatch({
+    control,
+    name: 'imageUrl',
+  })
   const { enqueueSnackbar } = useSnackbar()
   const { user } = useContext(userDataContext)
+  //const watchImageInput = watch('imageUrl', 'https://source.unsplash.com/random')
   const classes = useStyles()
 
   useEffect(() => {
-    (async function () {
-      const vehicle = await VehicleService.getOne(+match.params.vehicleId)
-      setVehicle(vehicle)
-    })()
+    setTimeout(() => {
+      (async function () {
+        const vehicle = await VehicleService.getOne(+match.params.vehicleId)
+        setVehicle(vehicle)
+      })()
+    }, 400)
   }, [])
 
   useEffect(() => {
     (async function () {
       try {
         const companyData = await CompanyService.getOne(user!.companyId)
-
         setCompany(companyData)
       } catch (error) {
         enqueueSnackbar('Não foi possível obter os dados da empresa')
@@ -117,8 +132,8 @@ const VehicleAdd: React.FC = () => {
 
   const onSubmit = async (data: any) => {
     try {
-      await CompanyService.update(user?.companyId, data)
-      enqueueSnackbar('Empresa atualizada com sucesso!', { variant: 'success' })
+      await VehicleService.create(data)
+      enqueueSnackbar('Veículo criado com sucesso!', { variant: 'success' })
     } catch (error) {
       if (error.response) {
         error.response.data.errors.forEach((err: any) => {
@@ -128,136 +143,298 @@ const VehicleAdd: React.FC = () => {
     }
   }
 
+  const handleButtonCancelEditVehicleDetailsOnClick = () => {
+    history.goBack()
+  }
+
   return (
     <Grid container spacing={3} className={classes.grid}>
-      {vehicle && (
-        <>
-          <Grid container xs={12} alignItems='center'>
-            <div>
-              <IconButton
-                aria-label='backOnePage'
-                onClick={() => history.goBack()}
-              >
-                <ArrowBackIcon />
-              </IconButton>
-            </div>
+      <Grid container xs={12} alignItems='center'>
+        <div>
+          <IconButton aria-label='backOnePage' onClick={() => history.goBack()}>
+            <ArrowBackIcon />
+          </IconButton>
+        </div>
 
+        <div>
+          <Breadcrumbs aria-label='breadcrumb'>
+            <LinkRouter color='inherit' to='/empresa'>
+              Minha Empresa
+            </LinkRouter>
+            <LinkRouter color='inherit' to='/veiculos'>
+              Veículos
+            </LinkRouter>
+            <span className={classes.breadcrumbCurrent}>Adicionar</span>
+          </Breadcrumbs>
+        </div>
+      </Grid>
+
+      <>
+        <Grid item xs={12} sm={6} style={{ height: '372px' }}>
+          <Card
+            className={classes.card}
+            style={{
+              backgroundImage: `url(${
+                watchImageInput || 'https://source.unsplash.com/random'
+              })`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+            }}
+          ></Card>
+        </Grid>
+
+        <Grid item xs={12} sm={6} direction='column'>
+          <Card className={classes.card}>
             <div>
-              <Breadcrumbs aria-label='breadcrumb'>
-                <LinkRouter color='inherit' to='/empresa'>
-                  Minha Empresa
-                </LinkRouter>
-                <LinkRouter color='inherit' to='/veiculos'>
-                  Veículos
-                </LinkRouter>
-                <LinkRouter
-                  color='inherit'
-                  to={`/veiculos/detalhes/${vehicle.id}`}
+              <>
+                <div
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'space-between',
+                    width: '100%',
+                  }}
                 >
-                  {`${vehicle?.make} ${vehicle?.model}`}
-                </LinkRouter>
-                <EditIcon />
-              </Breadcrumbs>
-            </div>
-          </Grid>
+                  {company && (
+                    <form
+                      onSubmit={handleSubmit(onSubmit)}
+                      style={{ width: '100%' }}
+                    >
+                      <Grid container spacing={3}>
+                        <Grid item xs={6}>
+                          <TextField
+                            defaultValue={vehicle?.make}
+                            id='make'
+                            name='make'
+                            label='Marca'
+                            fullWidth
+                            className={classes.input}
+                            inputRef={register}
+                            autoComplete='given-name'
+                            required
+                            onChange={(
+                              evt: React.ChangeEvent<HTMLInputElement>
+                            ) => {
+                              setVehicle((prev: any) => ({
+                                ...prev,
+                                make: evt.target.value,
+                              }))
+                            }}
+                          />
+                        </Grid>
 
-          <Grid item xs={12} sm={6}>
-            <Card
-              className={classes.card}
-              style={{
-                backgroundImage: `url(${
-                  vehicle?.imageUrl || '/Images/car-placeholder.jpg'
-                })`,
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-              }}
-            ></Card>
-          </Grid>
+                        <Grid item xs={6}>
+                          <TextField
+                            defaultValue={vehicle?.model}
+                            id='model'
+                            name='model'
+                            label='Modelo'
+                            fullWidth
+                            inputRef={register({ required: true })}
+                            autoComplete='shipping address-line1'
+                            className={classes.input}
+                            required
+                            onChange={(
+                              evt: React.ChangeEvent<HTMLInputElement>
+                            ) => {
+                              setVehicle((prev: any) => ({
+                                ...prev,
+                                model: evt.target.value,
+                              }))
+                            }}
+                          />
+                        </Grid>
+                      </Grid>
 
-          <Grid item xs={12} sm={6} direction='column'>
-            <Card className={classes.card}>
-              <div
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'space-between',
-                }}
-              >
-                {company && (
-                  <form
-                    onSubmit={handleSubmit(onSubmit)}
-                    style={{ width: '100%' }}
-                  >
-                    <Grid item xs={12} sm={12}>
-                      <TextField
-                        defaultValue={vehicle.make}
-                        id='make'
-                        name='make'
-                        label='Marca'
-                        fullWidth
-                        inputRef={register}
-                        autoComplete='given-name'
-                      />
-                    </Grid>
-                    <Grid item xs={12}>
-                      <TextField
-                        defaultValue={vehicle.model}
-                        id='model'
-                        name='model'
-                        label='Modelo'
-                        fullWidth
-                        inputRef={register({ required: true })}
-                        autoComplete='shipping address-line1'
-                        className={classes.input}
-                        required
-                      />
-                    </Grid>
+                      <Grid container spacing={3}>
+                        <Grid item xs={6}>
+                          <TextField
+                            defaultValue={vehicle?.year}
+                            id='year'
+                            name='year'
+                            label='Ano Fabricação'
+                            inputRef={register({ required: true })}
+                            autoComplete='shipping address-line1'
+                            className={classes.input}
+                            required
+                            onChange={(
+                              evt: React.ChangeEvent<HTMLInputElement>
+                            ) => {
+                              setVehicle((prev: any) => ({
+                                ...prev,
+                                year: evt.target.value,
+                              }))
+                            }}
+                          />
+                        </Grid>
 
-                    <Grid item xs={6}>
-                      <TextField
-                        defaultValue={vehicle.year}
-                        id='model'
-                        name='model'
-                        label='Ano Fabricação'
-                        inputRef={register({ required: true })}
-                        autoComplete='shipping address-line1'
-                        className={classes.input}
-                        required
-                      />
-                    </Grid>
+                        <Grid item xs={6}>
+                          <TextField
+                            defaultValue={vehicle?.yearModel}
+                            id='yearModel'
+                            name='yearModel'
+                            label='Ano Modelo'
+                            inputRef={register({ required: true })}
+                            autoComplete='shipping address-line1'
+                            className={classes.input}
+                            required
+                            onChange={(
+                              evt: React.ChangeEvent<HTMLInputElement>
+                            ) => {
+                              setVehicle((prev: any) => ({
+                                ...prev,
+                                yearModel: evt.target.value,
+                              }))
+                            }}
+                          />
+                        </Grid>
+                      </Grid>
 
-                    <Grid item xs={6}>
-                      <TextField
-                        defaultValue={vehicle.yearModel}
-                        id='model'
-                        name='model'
-                        label='Ano Modelo'
-                        inputRef={register({ required: true })}
-                        autoComplete='shipping address-line1'
-                        className={classes.input}
-                        required
-                      />
-                    </Grid>
+                      <Grid container spacing={3}>
+                        <Grid item xs={6}>
+                          <TextField
+                            defaultValue={vehicle?.color}
+                            id='color'
+                            name='color'
+                            label='Cor'
+                            fullWidth
+                            className={classes.input}
+                            inputRef={register}
+                            autoComplete='given-name'
+                            required
+                            onChange={(
+                              evt: React.ChangeEvent<HTMLInputElement>
+                            ) => {
+                              setVehicle((prev: any) => ({
+                                ...prev,
+                                color: evt.target.value,
+                              }))
+                            }}
+                          />
+                        </Grid>
 
-                    <Grid item xs={12} className={classes.buttonGroup}>
-                      <Button
-                        variant='contained'
-                        color='primary'
-                        startIcon={<SaveIcon />}
-                        onClick={() => window.alert('clicado')}
+                        <Grid item xs={6}>
+                          <TextField
+                            defaultValue={'aaa'}
+                            id='licensePlate'
+                            name='licensePlate'
+                            label='Placa'
+                            fullWidth
+                            inputRef={register({ required: true })}
+                            autoComplete='shipping address-line1'
+                            className={classes.input}
+                            required
+                            onChange={(
+                              evt: React.ChangeEvent<HTMLInputElement>
+                            ) => {
+                              setVehicle((prev: any) => ({
+                                ...prev,
+                                licensePlate: evt.target.value,
+                              }))
+                            }}
+                          />
+                        </Grid>
+                      </Grid>
+
+                      <Grid container spacing={3}>
+                        <Grid item xs={6}>
+                          <TextField
+                            defaultValue={vehicle?.kmDriven}
+                            id='kmDriven'
+                            name='kmDriven'
+                            label='Quilometragem'
+                            fullWidth
+                            className={classes.input}
+                            inputRef={register}
+                            autoComplete='given-name'
+                            required
+                            onChange={(
+                              evt: React.ChangeEvent<HTMLInputElement>
+                            ) => {
+                              setVehicle((prev: any) => ({
+                                ...prev,
+                                kmDriven: evt.target.value,
+                              }))
+                            }}
+                          />
+                        </Grid>
+
+                        <Grid item xs={6}>
+                          <Select
+                            defaultValue={vehicle?.fuelType}
+                            id='fuelType'
+                            name='fuelType'
+                            ref={register}
+                            label='Combustível'
+                            fullWidth
+                            autoComplete='shipping address-line1'
+                            className={classes.input}
+                            required
+                            onChange={(evt) => {
+                              console.log(evt.target.value, evt.target.name)
+                              setValue(
+                                evt.target.name as string,
+                                evt.target.value
+                              )
+                            }}
+                          >
+                            {Object.keys(fuelType).map((fuelKey) => (
+                              <MenuItem key={fuelKey} value={fuelKey}>
+                                {fuelType[fuelKey as keyof typeof fuelType]}
+                              </MenuItem>
+                            ))}
+                          </Select>
+                        </Grid>
+
+                        <Grid item xs={12}>
+                          <TextField
+                            id='imageUrl'
+                            name='imageUrl'
+                            placeholder='https://link-para-imagem/imagem.png'
+                            inputRef={register}
+                            label='Link para imagem'
+                            fullWidth
+                            className={classes.input}
+                          ></TextField>
+                        </Grid>
+                      </Grid>
+
+                      <div
+                        style={{
+                          display: 'flex',
+                          width: '100%',
+                          justifyContent: 'space-between',
+                          marginTop: '2rem',
+                        }}
                       >
-                        Salvar
-                      </Button>
-                    </Grid>
-                  </form>
-                )}
-              </div>
-            </Card>
-          </Grid>
-        </>
-      )}
+                        <Button
+                          variant='contained'
+                          color='secondary'
+                          startIcon={<CancelIcon />}
+                          onClick={handleButtonCancelEditVehicleDetailsOnClick}
+                        >
+                          Cancelar
+                        </Button>
+
+                        <Button
+                          variant='contained'
+                          color='primary'
+                          startIcon={<SaveIcon />}
+                          type='submit'
+                        >
+                          Salvar
+                        </Button>
+                      </div>
+                    </form>
+                  )}
+                </div>
+              </>
+            </div>
+          </Card>
+        </Grid>
+      </>
     </Grid>
   )
 }
 
-export default VehicleAdd
+export default VehicleDetails
