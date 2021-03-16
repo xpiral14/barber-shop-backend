@@ -1,5 +1,5 @@
 import api from '../Config/api'
-import Company from '../Models/Company'
+import Company from '../Contracts/Models/Company'
 
 
 export default class CompanyService{

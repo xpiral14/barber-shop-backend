@@ -5,7 +5,7 @@ import {
   SetStateAction,
   useState,
 } from 'react'
-import User from '../Models/User'
+import User from '../Contracts/Models/User'
 
 export const userDataContext = createContext<
   {

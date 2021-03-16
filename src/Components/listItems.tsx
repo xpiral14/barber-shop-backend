@@ -9,12 +9,28 @@ import BuildIcon from '@material-ui/icons/Build'
 
 export const mainListItems = (
   <div>
-    <ListItemLink primary = "Minha empresa" to = "/empresa" icon = {<BusinessIcon />} />
+    <ListItemLink
+      primary='Minha empresa'
+      to='/empresa'
+      icon={<BusinessIcon />}
+    />
 
-    <ListItemLink primary = "Clientes" to ="/clientes" icon = {<PeopleIcon />} />
-    <ListItemLink primary = "Ordem de serviço" to ="/ordens-servico" icon = {<ReceiptIcon />} />
-    <ListItemLink primary = "Estoque de peças" to ="/pecas" icon = {<BuildIcon />} />
-    <ListItemLink primary = "Veículoss" to ="/veiculos" icon = {<DirectionsCarIcon />} />
-    <ListItemLink primary = "Estatísticas" to ="/estatisticas" icon = {<BarChartIcon />} />
+    <ListItemLink primary='Clientes' to='/clientes' icon={<PeopleIcon />} />
+    <ListItemLink
+      primary='Ordem de serviço'
+      to='/ordens-servico'
+      icon={<ReceiptIcon />}
+    />
+    <ListItemLink primary='Estoque de peças' to='/pecas' icon={<BuildIcon />} />
+    <ListItemLink
+      primary='Veículos'
+      to='/veiculos'
+      icon={<DirectionsCarIcon />}
+    />
+    <ListItemLink
+      primary='Estatísticas'
+      to='/estatisticas'
+      icon={<BarChartIcon />}
+    />
   </div>
 )

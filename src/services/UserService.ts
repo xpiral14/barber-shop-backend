@@ -1,5 +1,5 @@
 import api from '../Config/api'
-import User from '../Models/User'
+import User from '../Contracts/Models/User'
 
 export default class CompanyService {
   static defaultPath = '/user'

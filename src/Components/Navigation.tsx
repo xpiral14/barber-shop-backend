@@ -22,12 +22,13 @@ import ExitToAppIcon from '@material-ui/icons/ExitToApp'
 import { useHistory } from 'react-router-dom'
 import AuthService from '../services/AuthService'
 import { useSnackbar } from 'notistack'
+
 function Copyright() {
   return (
     <Typography variant='body2' color='textSecondary' align='center'>
       {'Copyright © '}
       <Link color='inherit' href='https://material-ui.com/'>
-        Your Website
+        MMS - Mechanic Management System
       </Link>{' '}
       {new Date().getFullYear()}
       {'.'}
@@ -115,7 +116,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-const Navigation: React.FC = ({children}) => {
+const Navigation: React.FC = ({ children }) => {
   const history = useHistory()
   const classes = useStyles()
   const { enqueueSnackbar } = useSnackbar()
@@ -125,6 +126,18 @@ const Navigation: React.FC = ({children}) => {
   }
   const handleDrawerClose = () => {
     setOpen(false)
+  }
+
+  const handleLogoutButton = () => {
+    async () => {
+      try {
+        await AuthService.logout()
+        enqueueSnackbar('Deslogado com sucesso', { variant: 'success' })
+        history.push('/login')
+      } catch (error) {
+        enqueueSnackbar(error.response.status.errors[0].message)
+      }
+    }
   }
 
   return (
@@ -154,17 +167,12 @@ const Navigation: React.FC = ({children}) => {
             noWrap
             className={classes.title}
           >
-            Dashboard
+
           </Typography>
-          <IconButton color = "inherit" onClick = { async () =>{
-            try {
-              await AuthService.logout()
-              enqueueSnackbar('Deslogado com sucesso', {variant: 'success'})
-              history.push('/login')
-            } catch (error) {
-              enqueueSnackbar(error.response.status.errors[0].message)
-            }
-          }}>
+          <IconButton
+            color='inherit'
+            onClick={handleLogoutButton}
+          >
             <ExitToAppIcon />
           </IconButton>
           <IconButton color='inherit'>
