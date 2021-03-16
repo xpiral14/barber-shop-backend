@@ -110,12 +110,10 @@ const VehicleDetails: React.FC = () => {
   const classes = useStyles()
 
   useEffect(() => {
-    setTimeout(() => {
       (async function () {
         const vehicle = await VehicleService.getOne(+match.params.vehicleId)
         setVehicle(vehicle)
       })()
-    }, 400)
   }, [])
 
   useEffect(() => {
