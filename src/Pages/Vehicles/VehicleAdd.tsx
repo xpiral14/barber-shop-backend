@@ -110,10 +110,10 @@ const VehicleDetails: React.FC = () => {
   const classes = useStyles()
 
   useEffect(() => {
-      (async function () {
-        const vehicle = await VehicleService.getOne(+match.params.vehicleId)
-        setVehicle(vehicle)
-      })()
+    (async function () {
+      const vehicle = await VehicleService.getOne(+match.params.vehicleId)
+      setVehicle(vehicle)
+    })()
   }, [])
 
   useEffect(() => {
@@ -171,9 +171,7 @@ const VehicleDetails: React.FC = () => {
           <Card
             className={classes.card}
             style={{
-              backgroundImage: `url(${
-                watchImageInput || 'https://source.unsplash.com/random'
-              })`,
+              backgroundImage: `url(${watchImageInput || 'https://source.unsplash.com/random'})`,
               backgroundSize: 'cover',
               backgroundPosition: 'center',
             }}
