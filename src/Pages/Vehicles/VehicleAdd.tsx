@@ -107,7 +107,6 @@ const VehicleDetails: React.FC = () => {
   })
   const { enqueueSnackbar } = useSnackbar()
   const { user } = useContext(userDataContext)
-  //const watchImageInput = watch('imageUrl', 'https://source.unsplash.com/random')
   const classes = useStyles()
 
   useEffect(() => {
@@ -361,16 +360,15 @@ const VehicleDetails: React.FC = () => {
 
                         <Grid item xs={6}>
                           <Select
-                            defaultValue={vehicle?.fuelType}
                             id='fuelType'
                             name='fuelType'
-                            ref={register}
+                            inputRef={register}
                             label='Combustível'
                             fullWidth
-                            autoComplete='shipping address-line1'
                             className={classes.input}
+                            style={{ marginTop: '33px' }}
                             required
-                            onChange={(evt) => {
+                            onChange={(evt: any) => {
                               console.log(evt.target.value, evt.target.name)
                               setValue(
                                 evt.target.name as string,
