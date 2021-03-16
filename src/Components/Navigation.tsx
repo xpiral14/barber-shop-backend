@@ -128,6 +128,18 @@ const Navigation: React.FC = ({ children }) => {
     setOpen(false)
   }
 
+  const handleLogoutButton = () => {
+    async () => {
+      try {
+        await AuthService.logout()
+        enqueueSnackbar('Deslogado com sucesso', { variant: 'success' })
+        history.push('/login')
+      } catch (error) {
+        enqueueSnackbar(error.response.status.errors[0].message)
+      }
+    }
+  }
+
   return (
     <div className={classes.root}>
       <CssBaseline />
@@ -159,15 +171,7 @@ const Navigation: React.FC = ({ children }) => {
           </Typography>
           <IconButton
             color='inherit'
-            onClick={async () => {
-              try {
-                await AuthService.logout()
-                enqueueSnackbar('Deslogado com sucesso', { variant: 'success' })
-                history.push('/login')
-              } catch (error) {
-                enqueueSnackbar(error.response.status.errors[0].message)
-              }
-            }}
+            onClick={handleLogoutButton}
           >
             <ExitToAppIcon />
           </IconButton>
