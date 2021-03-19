@@ -1,4 +1,3 @@
-export default function joinClasses(...classes: string[]){
-
+export default function joinClasses(...classes: string[]) {
   return classes.join(' ')
 }
