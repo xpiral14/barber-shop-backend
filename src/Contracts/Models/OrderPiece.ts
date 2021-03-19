@@ -1,4 +1,4 @@
-import Piece from '../../Models/Piece'
+import Piece from './Piece'
 
 export default interface OrderPiece {
     id: number;
