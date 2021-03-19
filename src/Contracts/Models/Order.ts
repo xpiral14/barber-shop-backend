@@ -1,3 +1,5 @@
+import Costumer from './Costumer'
+import OrderPiece from './OrderPiece'
 import User from './User'
 import Vehicle from './Vehicle'
 
@@ -11,9 +13,11 @@ export default interface Order {
   executedBy?: string
   estimatedTime: number
   status: string
-  notice: string
+  notice?: string
   created_at: string
   updated_at: string
-  userThatRegistered: User
-  vehicle: Vehicle
+  userThatRegistered?: User
+  vehicle?: Vehicle
+  orderPiece?: OrderPiece[]
+  costumer: Costumer
 }
