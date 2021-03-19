@@ -114,7 +114,7 @@ const Orders = () => {
       const response = await OrderService.getAll()
       setOrders(response.data.data)
     } catch (error) {
-      console.log(error)
+      enqueueSnackbar('Não foi possível obter a listagem de ordens de serviço', {variant: 'error'})
     }
   }
 
