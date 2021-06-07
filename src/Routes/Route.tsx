@@ -4,7 +4,6 @@ import {
   RouteProps as ReactDomRouteProps,
   useHistory,
 } from 'react-router-dom'
-import Navigation from '../Components/Navigation'
 import { userDataContext } from '../context/UserData'
 
 interface RouteProps extends ReactDomRouteProps {
@@ -24,9 +23,7 @@ const Route: FC<RouteProps> = ({ component: Component, ...rest }) => {
   return (
     <ReactDomRoute
       render={(props) => (
-        <Navigation>
-          <Component {...props} />
-        </Navigation>
+        <Component {...props} />
       )}
       {...rest}
     />
