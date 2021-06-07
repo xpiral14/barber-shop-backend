@@ -166,7 +166,10 @@ declare module 'jspanel4/es6module/jspanel' {
     /**
      * Stores optional custom data.
      *
-     * *This option does not influence the shown panel in any way. It's just a place to store optional data of any kind. However, when using the layout extension, the data passed to option data is stored in localStorage/sessionStorage when calling `jsPanel.layout.save()`*
+     * *This option does not influence the shown panel in any way. It's just a
+     * place to store optional data of any kind. However, when using the layout
+     * extension, the data passed to option data is stored in
+     * localStorage/sessionStorage when calling `jsPanel.layout.save()`*
      */
     data?: any
 
@@ -198,7 +201,8 @@ declare module 'jspanel4/es6module/jspanel' {
      * So in order to hide/show a configured/existing toolbar you just need to
      * toggle its 'active' class. For example with the global method
      * `jsPanel.toggleClass(panel.footer, 'active')`; where panel is a
-     * reference to the panel and footer references the above mentioned toolbar <div>.
+     * reference to the panel and footer references the above mentioned toolbar
+     * <div>.
      */
     footerToolbar?:
       | string
@@ -220,7 +224,8 @@ declare module 'jspanel4/es6module/jspanel' {
     header?: boolean | string
 
     /**
-     * With this option you can configure which panel controls are shown, set their size and add additional custom controls.
+     * With this option you can configure which panel controls are shown,
+     * set their size and add additional custom controls.
      *
      * *To alter a control's status of an existing panel use the panel method
      * [`setControlStatus()`](https://jspanel.de/#methods/setControlStatus)*
@@ -301,15 +306,209 @@ declare module 'jspanel4/es6module/jspanel' {
 
     minimizeTo?: string | boolean
 
-     /**
-      * 
-      */
-    onbeforeclose?: FunctionWithPanelInMethod
+    /**
+     * Function or array of function to execute immediately before a panel
+     * closes, regardless of whether the panel is closed by a user or
+     * programmatically. It may also be used to cancel closing of a panel.
+     *
+     * *More details on
+     * [onbeforeClose()](https://jspanel.de/#options/onbeforeclose)*
+     */
+    onbeforeclose?: FunctionWithPanelInMethod | FunctionWithPanelInMethod[]
+
+    /**
+     * Function or array of function to execute immediately before a panel
+     * maximizes, regardless of whether the panel is closed by a user or
+     * programmatically. It may also be used to cancel maximizing of a panel.
+     *
+     * *More details on
+     * [onbeforeClose()](https://jspanel.de/#options/onbeforemaximize)*
+     */
+    onbeforemaximize?: FunctionWithPanelInMethod | FunctionWithPanelInMethod[]
+
+    /**
+     * Function or array of function to execute immediately before a panel
+     * minimizes, regardless of whether the panel is minimized by a user or
+     * programmatically. It may also be used to cancel minimizing of a panel.
+     */
+    onbeforeminimize?: FunctionWithPanelInMethod | FunctionWithPanelInMethod[]
+
+    /**
+     * Function or array of function to execute immediately before a panel
+     * normalizes, regardless of whether the panel is minimized by a user or
+     * programmatically. It may also be used to cancel minimizing of a panel.
+     */
+    onbeforeminimize?: FunctionWithPanelInMethod | FunctionWithPanelInMethod[]
+
+    /**
+     * Function or array of function to execute immediately before a panel
+     * smallifies, regardless of whether the panel is minimized by a user or
+     * programmatically. It may also be used to cancel minimizing of a panel.
+     */
+    onbeforeminimize?: FunctionWithPanelInMethod | FunctionWithPanelInMethod[]
+
+    /**
+     * Function or array of function to execute immediately before a panel
+     * unsmallifies, regardless of whether the panel is smallified by a user or
+     * programmatically. It may also be used to cancel minimizing of a panel.
+     */
+    onbeforeunsmallify?: FunctionWithPanelInMethod | FunctionWithPanelInMethod[]
+
+    /**
+     * Function or array of function to execute after a panel closed,
+     * regardless of whether the panel was closed by a user or programmatically.
+     */
+    onclosed?: FunctionWithPanelInMethod | FunctionWithPanelInMethod[]
+
+    /**
+     * Function or array of function to execute after a panel fronted
+     * (panel was clicked in order to get it to the foreground), regardless of
+     * whether the panel was fronted by a user or programmatically.
+     */
+    onclosed?: FunctionWithPanelInMethod | FunctionWithPanelInMethod[]
+
+    /**
+     * Function or array of function to execute after a panel maximized,
+     * regardless of whether the panel was maximized by a user or
+     * rogrammatically.
+     */
+    onmaximized?: FunctionWithPanelInMethod | FunctionWithPanelInMethod[]
+
+    /**
+     * Function or array of function to execute after a panel minimized,
+     * regardless of whether the panel was minimized by a user or
+     * programmatically.
+     */
+    onmaximized?: FunctionWithPanelInMethod | FunctionWithPanelInMethod[]
+
+    /**
+     * Function or array of function to execute after a panel normalized,
+     * regardless of whether the panel was normalized by a user or[
+     * programmatically.
+     */
+    onnormalized?: FunctionWithPanelInMethod | FunctionWithPanelInMethod[]
+
+    /**
+     * Function or array of function to execute after a panel smallified,
+     * regardless of whether the panel was smallified by a user or
+     * programmatically.
+     */
+    onsmallified?: FunctionWithPanelInMethod | FunctionWithPanelInMethod[]
+
+    /**
+     * Function or array of function to execute after a panel unsmallified,
+     * regardless of whether the panel was unsmallified by a user or
+     * programmatically.
+     */
+    onunsmallified?: FunctionWithPanelInMethod | FunctionWithPanelInMethod[]
+
+    /**
+     * Function or array of function to execute after a panel changed its
+     * status, regardless of whether the panel's status change was initiated
+     * by a user or programmatically.
+     */
+    onstatuschange?: FunctionWithPanelInMethod | FunctionWithPanelInMethod[]
+
+    /**
+     * If this option is used a child panel shifts within its parent panel's
+     * content section in order to maintain its relative position while the
+     * parent panel is resized with the mouse
+     *
+     * *This option applies only to child panels (panels that are appended to
+     * the content section of another panel).*
+     */
+    onparentresize?: FunctionWithPanelInMethod | FunctionWithPanelInMethod[]
+
+    /**
+     * Makes a panel responsive to a window resize event.
+     * *This option applies only to panels using option `container: 'window'`
+     * which is the default for option container.*
+     */
+    onwindowresize?: FunctionWithPanelInMethod | FunctionWithPanelInMethod[]
+
+    /**
+     * By default a newly created panel has a CSS opacity of 0. Only after most
+     * of the panel options are applied and the panel is positioned in the
+     * document CSS opacity is set to 1.
+     *
+     * There might be use cases where you don't want the panel to be visible
+     * until a certain action is done (e.g. repositioning a tooltip). If you
+     * set option opacity the panel maintains the set value until you explicitly
+     * change it.
+     */
+    opacity?: number
+
+    panelSize?: Size | string
+
+    /**
+     * By default all standard panels get a class name composed of `jsPanel-`
+     * concatenated with the setting of this option.
+     *
+     * *Normally you should not use option paneltype at all since it might lead
+     * to unexpected behaviour of panels.*
+     *
+     * *An exception to this general rule could be when you create your own
+     * jsPanel extension for a special type of panel.*
+     */
+    paneltype?:
+      | 'standard'
+      | 'contextmenu'
+      | 'error'
+      | 'hint'
+      | 'modal'
+      | 'tooltip'
+
+    /**
+     * Somehow a panel needs to be positioned. By default a panel is centered.
+     * Either in the center of the browser viewport or in the center of its
+     * parent element depending on the setting of option container.
+     *
+     * *To reposition an existing panel use the panel method
+     * [`reposition()`](https://jspanel.de/#methods/reposition)*
+     */
+    position?: boolean | object | string
+
+    /**
+     * This option configures the resizeit interaction.
+     * By default a jsPanel is resizable. Default resize handles are all corners
+     * (which resize width and height) and all sides (which resize width or
+     * height).
+     */
+    resizeit?: object | false
+
+    /**
+     * Switches a panel's default left-to right text direction to right-to-left
+     * text direction.
+     */
+    rtl?: Rtl
+
+    /**
+     * By default a panel is created in a normalized status. This option allows
+     * to create a panel already maximized, minimized, smallified or
+     * smallifiedmax.
+     */
+    setStatus?: 'maximized' | 'minimized' | 'smallified' | 'smallifiedmax'
+
+    /**
+     * Panel options maximizedMargin, dragit, resizeit and the dragit.snap
+     * feature can set some sort of containment. Option syncMargins synchronizes
+     * those settings to a common value set by option maximizedMargin.
+     */
+    syncMargins?: boolean
+
+    /**
+     * Replaces the default jsPanel HTML template with a customized one of
+     * yourown.
+     *
+     * Assume you need to make a change to the panel that applies to variety of
+     * your panels. Instead of applying this change each time you create a panel
+     * you could create a custom panel template incorporating this change and
+     * use that template for your panels.
+     */
+    template?: HTMLElement
   }
 
-  type FunctionWithPanelInMethod = <R = void>
-    (panel: Panel) => R
-  
+  type FunctionWithPanelInMethod = <R = void>(panel: Panel) => R
 
   export type Panel = {}
 
@@ -321,5 +520,11 @@ declare module 'jspanel4/es6module/jspanel' {
     colorFilledDark?: number
     colorFilledLight?: number
   }
+
+  type Rtl = {
+    rtl?: boolean
+    lang?: string
+  }
+
   export const jsPanel: JsPanel
 }
